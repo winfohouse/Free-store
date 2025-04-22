@@ -1,6 +1,6 @@
-import { ProductCardProps, ProductsProps } from "@/components/product/ProductCard";
-import { renderStars } from "../amazan/Product";
+import RenderStars from "@/components/product/RenderStars";
 import { formatPrice } from "@/demoData/Products";
+import { ProductsProps, Product } from "@/types/Products";
 
   // Product data
   export const product = {
@@ -141,15 +141,15 @@ export function SimilarProducts({products}: ProductsProps){
           <h2 className="text-lg font-medium mb-4">Similar products you might like</h2>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {products.map((item: ProductCardProps, index:number) => (
+            {products.map((item: Product, index:number) => (
               <div key={index} className="border rounded-lg overflow-hidden p-3">
                 <div className="h-32 flex items-center justify-center">
-                  <img src={item.image} alt={item.title} className="max-h-full" />
+                  <img src={item.images[0]} alt={item.title} className="max-h-full" />
                 </div>
                 <div className="mt-2">
                   <div className="text-sm h-12 overflow-hidden">{item.title}</div>
                   <div className="flex items-center mt-1 mb-1">
-                    {renderStars(item.rating)}
+                    {RenderStars(item.rating)}
                   </div>
                   <div className="font-medium">{formatPrice(item.price)}</div>
                 </div>

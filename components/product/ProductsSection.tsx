@@ -1,7 +1,7 @@
 "use client"
 import ProductCard from "@/components/product/ProductCard";
 import { categories } from "@/demoData/Market";
-import { Product } from "@/demoData/ProductsHendeler";
+import { Product } from "@/types/Products";
 import { useEffect, useState } from "react";
 
 type props ={ products: Product[], };

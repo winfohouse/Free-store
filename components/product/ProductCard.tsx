@@ -1,11 +1,10 @@
 'use client'
-import { discountPercent, Product } from '@/demoData/ProductsHendeler';
+import { discountPercent } from '@/demoData/ProductsHendeler';
+import { Product } from '@/types/Products';
 import { Award, Eye, Heart, ShoppingCart, Star, Tag } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
-export type ProductsProps = { products : Product[], }
 type FrequentlyBoughtTogetherProps ={ image: string, alt: string, price: number };
 
 export default function ProductCard(product: Product ) {
@@ -186,7 +185,7 @@ export function FrequentlyBoughtTogether({image, alt, price}: FrequentlyBoughtTo
   return (
     <div className="w-20 h-20 bg-gray-50 flex flex-col items-center justify-center space-y-4">
       <img
-        src={'https://placehold.co/80'}
+        src={image ? image : 'https://placehold.co/80'}
         alt={alt}
         width={80}
         height={80}

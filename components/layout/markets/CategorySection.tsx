@@ -1,8 +1,5 @@
-export type Category = {
-    id: number;
-    name: string;
-    icon: string;
-}
+import { Category } from "@/types/Products";
+
 type props = {categories : Category[]}
 
 export default function CategorySection({categories}: props) {

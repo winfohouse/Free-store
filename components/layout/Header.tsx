@@ -19,6 +19,7 @@ import {
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import SidebarCart from "../ui/SidebarCart";
 
 // Define types for categories
 interface Category {
@@ -48,11 +49,14 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchSuggestions, setSearchSuggestions] = useState<string[]>([]);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-  
+
   // UI state for indicators
   const [cartCount, setCartCount] = useState(3);
   const [wishlistCount, setWishlistCount] = useState(5);
   const [notificationCount, setNotificationCount] = useState(2);
+
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('cart');
 
   // Refs for click outside detection
   const accountDropdownRef = useRef<HTMLDivElement>(null);
@@ -66,12 +70,12 @@ const Navbar = () => {
   // Hide navbar on specific routes
   const hiddenRoutes = ["/login", "/signup", "/dashboard"];
   if (hiddenRoutes.includes(pathname as string)) return null;
-  
+
   // Sample search suggestions
   const popularSearches = [
     "Wireless Earbuds",
     "Smart Watches",
-    "Gaming Laptops", 
+    "Gaming Laptops",
     "4K Monitors",
     "Fitness Trackers"
   ];
@@ -79,7 +83,7 @@ const Navbar = () => {
   // Simulate search suggestions
   useEffect(() => {
     if (searchQuery.length > 1) {
-      const filtered = popularSearches.filter(item => 
+      const filtered = popularSearches.filter(item =>
         item.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setSearchSuggestions(filtered);
@@ -114,7 +118,7 @@ const Navbar = () => {
 
     window.addEventListener('scroll', handleScroll);
     document.addEventListener("mousedown", handleClickOutside);
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
       document.removeEventListener("mousedown", handleClickOutside);
@@ -130,9 +134,8 @@ const Navbar = () => {
   // Avoid hydration errors
   if (!isMounted) return null;
 
-  const navbarClasses = `transition-all duration-300 ${
-    isSticky ? "sticky top-0 shadow-md z-50 bg-blue-800" : "bg-blue-700"
-  } text-white`;
+  const navbarClasses = `transition-all duration-300 ${isSticky ? "sticky top-0 shadow-md z-50 bg-blue-800" : "bg-blue-700"
+    } text-white`;
 
   return (
     <div className={navbarClasses}>
@@ -140,7 +143,7 @@ const Navbar = () => {
       <div className="bg-blue-900 text-white py-1 px-4 text-center text-sm">
         <p>Free shipping on orders over $50 | Use code WELCOME10 for 10% off your first order</p>
       </div>
-      
+
       <div className="container mx-auto px-2">
         <div className="flex items-center justify-between py-4">
           <div className="flex items-center">
@@ -150,24 +153,24 @@ const Navbar = () => {
             >
               <Menu size={24} />
             </button>
-            
+
             <Link href="/" className="text-2xl font-bold">MarketWorld</Link>
-            
+
             <div className="hidden md:flex place-items-center ml-8 space-x-1 text-center" ref={categoryDropdownRef}>
-              <button 
+              <button
                 className="px-3 py-2 hover:bg-blue-600 rounded-md flex items-center"
                 onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
               >
                 Categories <ChevronDown size={16} className="ml-1" />
               </button>
-              
+
               {showCategoryDropdown && (
                 <div className="absolute top-16 left-0 w-full bg-white shadow-lg z-40">
                   <div className="container mx-auto px-4 py-6 grid grid-cols-4 gap-4 text-black">
                     <div className="col-span-1 border-r">
                       {categories.map(category => (
-                        <div 
-                          key={category.id} 
+                        <div
+                          key={category.id}
                           className={`py-2 px-4 flex items-center justify-between hover:bg-gray-100 cursor-pointer ${activeCategory === category.id ? 'bg-gray-100' : ''}`}
                           onMouseEnter={() => setActiveCategory(category.id)}
                         >
@@ -207,10 +210,8 @@ const Navbar = () => {
                   </div>
                 </div>
               )}
-              
-              <Link href="/deals" className="px-3 py-2 hover:bg-blue-600 rounded-md">Deals</Link>
-              <Link href="/new-arrivals" className="px-3 py-2 hover:bg-blue-600 rounded-md">New Arrivals</Link>
-              <Link href="/best-sellers" className="px-3 py-2 hover:bg-blue-600 rounded-md">Best Sellers</Link>
+
+              <Link href="/category" className="px-3 py-2 hover:bg-blue-600 rounded-md">Deals</Link>
             </div>
           </div>
 
@@ -229,7 +230,7 @@ const Navbar = () => {
                 <Search size={20} />
               </button>
             </div>
-            
+
             {isSearchFocused && searchSuggestions.length > 0 && (
               <div className="absolute w-full bg-white mt-1 rounded-lg shadow-lg z-30 text-black py-2">
                 {searchSuggestions.map((suggestion, idx) => (
@@ -262,7 +263,7 @@ const Navbar = () => {
                 )}
                 <span className="hidden lg:inline">Notifications</span>
               </button>
-              
+
               <Link href="/wishlist" className="flex items-center relative hover:text-blue-200">
                 <Heart size={20} className="mr-1" />
                 {wishlistCount > 0 && (
@@ -272,8 +273,8 @@ const Navbar = () => {
                 )}
                 <span className="hidden lg:inline">Wishlist</span>
               </Link>
-              
-              <Link href="/cart" className="flex items-center relative hover:text-blue-200">
+
+              <div className="flex items-center relative hover:text-blue-200" onClick={() => setIsCartOpen(true)}>
                 <ShoppingCart size={20} className="mr-1" />
                 {cartCount > 0 && (
                   <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
@@ -281,10 +282,16 @@ const Navbar = () => {
                   </span>
                 )}
                 <span className="hidden lg:inline">Cart</span>
-              </Link>
-              
+              </div>
+              <SidebarCart
+                isOpen={isCartOpen}
+                onClose={() => setIsCartOpen(false)}
+                activeTab={activeTab}
+                onTabChange={activeTab}
+              />
+
               <div className="relative" ref={accountDropdownRef}>
-                <button 
+                <button
                   className="flex items-center hover:text-blue-200"
                   onClick={() => setShowAccountDropdown(!showAccountDropdown)}
                 >
@@ -292,7 +299,7 @@ const Navbar = () => {
                   <span className="hidden lg:inline">Account</span>
                   <ChevronDown size={16} className="ml-1" />
                 </button>
-                
+
                 {showAccountDropdown && (
                   <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg z-30 text-black py-2">
                     <div className="px-4 py-3 border-b">
@@ -300,27 +307,27 @@ const Navbar = () => {
                       <p className="text-sm text-gray-500">sarah.j@example.com</p>
                     </div>
                     <div className="py-1">
-                      <Link href="/profile" className="block px-4 py-2 hover:bg-gray-100 flex items-center">
+                      <Link href="/profile" className=" px-4 py-2 hover:bg-gray-100 flex items-center">
                         <User size={16} className="mr-3 text-gray-500" />
                         <span>My Profile</span>
                       </Link>
-                      <Link href="/orders" className="block px-4 py-2 hover:bg-gray-100 flex items-center">
+                      <Link href="/orders" className="px-4 py-2 hover:bg-gray-100 flex items-center">
                         <Package size={16} className="mr-3 text-gray-500" />
                         <span>My Orders</span>
                       </Link>
-                      <Link href="/settings" className="block px-4 py-2 hover:bg-gray-100 flex items-center">
+                      <Link href="/settings" className="px-4 py-2 hover:bg-gray-100 flex items-center">
                         <Settings size={16} className="mr-3 text-gray-500" />
                         <span>Account Settings</span>
                       </Link>
-                      <Link href="/help" className="block px-4 py-2 hover:bg-gray-100 flex items-center">
+                      <Link href="/help" className="px-4 py-2 hover:bg-gray-100 flex items-center">
                         <HelpCircle size={16} className="mr-3 text-gray-500" />
                         <span>Help Center</span>
                       </Link>
                     </div>
                     <div className="border-t py-1">
-                      <button 
+                      <button
                         onClick={handleLogout}
-                        className="block w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center text-red-600"
+                        className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center text-red-600"
                       >
                         <LogOut size={16} className="mr-3" />
                         <span>Sign Out</span>
@@ -330,7 +337,7 @@ const Navbar = () => {
                 )}
               </div>
             </div>
-            
+
             <div className="flex md:hidden space-x-3">
               <button className="relative">
                 <Bell size={24} />
@@ -365,7 +372,7 @@ const Navbar = () => {
               <Search size={20} />
             </button>
           </div>
-          
+
           {searchQuery.length > 1 && searchSuggestions.length > 0 && (
             <div className="bg-white mt-1 rounded-lg shadow-lg z-30 text-black py-2">
               {searchSuggestions.map((suggestion, idx) => (
@@ -377,7 +384,7 @@ const Navbar = () => {
           )}
         </div>
       </div>
-      
+
       {/* Mobile Menu Drawer */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 z-50">
@@ -388,7 +395,7 @@ const Navbar = () => {
                 <X size={24} />
               </button>
             </div>
-            
+
             <div className="p-4">
               <div className="border-b pb-4 mb-4">
                 <div className="flex items-center mb-4">
@@ -403,7 +410,7 @@ const Navbar = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="space-y-1">
                 <Link href="/" className="flex items-center py-3 px-2 hover:bg-gray-100 rounded">
                   <Home size={20} className="mr-3 text-gray-600" />
@@ -445,9 +452,9 @@ const Navbar = () => {
               <div className="mt-6 border-t pt-4">
                 <h3 className="font-bold mb-2">Categories</h3>
                 {categories.map(category => (
-                  <Link 
-                    href={`/category/${category.id}`} 
-                    key={category.id} 
+                  <Link
+                    href={`/category/${category.id}`}
+                    key={category.id}
                     className="py-2 flex items-center justify-between hover:bg-gray-100"
                   >
                     <div className="flex items-center">
@@ -458,7 +465,7 @@ const Navbar = () => {
                   </Link>
                 ))}
               </div>
-              
+
               <div className="mt-6 border-t pt-4">
                 <h3 className="font-bold mb-2">Account</h3>
                 <div className="space-y-1">
@@ -478,8 +485,8 @@ const Navbar = () => {
                     <HelpCircle size={18} className="mr-2" />
                     Help Center
                   </Link>
-                  <button 
-                    onClick={handleLogout} 
+                  <button
+                    onClick={handleLogout}
                     className="flex items-center py-2 text-red-600 w-full text-left"
                   >
                     <LogOut size={18} className="mr-2" />

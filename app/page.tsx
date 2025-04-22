@@ -1,12 +1,10 @@
-import Link from 'next/link';
-
-import ProductCard from '@/components/product/ProductCard';
-import Testimonials from '@/components/Testimonials';
-import ExpandedEcommerceNav from '@/components/ui/ExpandedEcommerceNav';
-import Hero from '@/components/ui/Hero';
-import { products } from '@/demoData/Products2';
-import { Product } from '@/demoData/ProductsHendeler';
-import { BarChart2, Check, Search, ShoppingCart } from 'lucide-react';
+import ProductCard from "@/components/product/ProductCard";
+import ExpandedEcommerceNav from "@/components/ui/ExpandedEcommerceNav";
+import Hero from "@/components/ui/Hero";
+import Testimonials from "@/components/ui/Testimonials";
+import { products } from "@/demoData/Products2";
+import { Product } from "@/types/Products";
+import { BarChart2, Check, Link, Search, ShoppingCart } from "lucide-react";
 
 // Mock data - in a real app, this would come from an API
 export default function HomePage() {
@@ -32,7 +30,7 @@ export default function HomePage() {
                 <BarChart2 className="text-blue-600 w-8 h-8" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Find the Best of the Best</h3>
-              <p className="text-gray-600">Products from All Over the worlds</p>
+              <p className="text-gray-60">Products from All Over the worlds</p>
             </div>
             <div className="text-center">
               <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">

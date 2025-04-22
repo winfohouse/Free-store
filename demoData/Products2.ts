@@ -1,4 +1,5 @@
-import { Product } from "./ProductsHendeler";
+import { Product } from "@/types/Products";
+
 let count= 12345;
 export const products: Product[] = [
   {

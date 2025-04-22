@@ -1,84 +1,143 @@
-
 // Root component: ProductsPage.tsx
 'use client'
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { products } from '@/demoData/Products2';
+import SearchBar from '@/components/layout/search/SearchBar';
+import ViewToggle from '@/components/layout/search/ViewToggle';
+import ProductsSection from '@/components/product/ProductsSection';
+import ProductTypeFilter from '@/components/ui/FilterPanel'; // Import our new filter component
+
 import { sortProducts } from '@/demoData/Products';
-import { Product } from '@/demoData/ProductsHendeler';
-import SearchBar from './SearchBar';
-import FilterPanel from './FilterPanel';
-import ProductsDisplay from './ProductsDisplay';
-import ViewToggle from './ViewToggle';
+import { products } from '@/demoData/Products2';
+import { Product } from '@/types/Products';
+import { useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 
 export default function ProductsPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
+  
   
   // State management
   const [viewMode, setViewMode] = useState<'grid' | 'list'>(
     searchParams.get('view') === 'list' ? 'list' : 'grid'
   );
   const [isFilterVisible, setIsFilterVisible] = useState(true);
-  const [priceRange, setPriceRange] = useState<[number, number]>([
-    parseInt(searchParams.get('minPrice') || '0'),
-    parseInt(searchParams.get('maxPrice') || '1000')
-  ]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(
-    searchParams.get('categories') ? searchParams.get('categories')!.split(',') : ['Electronics']
-  );
-  const [selectedRating, setSelectedRating] = useState<number>(
-    parseInt(searchParams.get('rating') || '0')
+  
+  // Core filter state
+  const [searchQuery, setSearchQuery] = useState<string>(
+    searchParams.get('q') || ''
   );
   const [sortOption, setSortOption] = useState<string>(
     searchParams.get('sort') || 'relevance'
   );
-  const [searchQuery, setSearchQuery] = useState<string>(
-    searchParams.get('q') || ''
-  );
-
-  // Update URL when filters change
-  const updateUrlParams = () => {
-    const params = new URLSearchParams();
+  
+  // Prepare filters object for our new filter component
+  const getFiltersFromParams = () => {
+    const filters: Record<string, string | string[] | undefined> = {};
     
-    if (searchQuery) params.set('q', searchQuery);
-    if (viewMode !== 'grid') params.set('view', viewMode);
-    if (priceRange[0] > 0) params.set('minPrice', priceRange[0].toString());
-    if (priceRange[1] < 1000) params.set('maxPrice', priceRange[1].toString());
-    if (selectedCategories.length > 0) params.set('categories', selectedCategories.join(','));
-    if (selectedRating > 0) params.set('rating', selectedRating.toString());
-    if (sortOption !== 'relevance') params.set('sort', sortOption);
+    // Handle price range
+    const minPrice = searchParams.get('minPrice');
+    const maxPrice = searchParams.get('maxPrice');
+    if (minPrice) filters.minPrice = minPrice;
+    if (maxPrice) filters.maxPrice = maxPrice;
     
-    router.push(`?${params.toString()}`, { scroll: false });
+    // Handle categories
+    const categories = searchParams.get('categories');
+    if (categories) filters.categories = categories.split(',');
+    
+    // Handle rating
+    const rating = searchParams.get('rating');
+    if (rating) filters.rating = rating;
+    
+    // Handle brand
+    const brand = searchParams.get('brand');
+    if (brand) filters.brand = brand;
+    
+    // Handle tags/product types
+    const tags = searchParams.getAll('tag');
+    if (tags.length > 0) filters.tag = tags;
+    
+    // Handle platform
+    const platform = searchParams.get('platform');
+    if (platform) filters.platform = platform;
+    
+    // Handle availability
+    const availability = searchParams.get('availability');
+    if (availability) filters.availability = availability;
+    
+    // Handle shipping
+    const shipping = searchParams.get('shipping');
+    if (shipping) filters.shipping = shipping;
+    
+    // Handle deals
+    const deal = searchParams.get('deal');
+    if (deal) filters.deal = deal;
+    
+    return filters;
   };
-
-  // Apply URL updates when filters change
-  useEffect(() => {
-    updateUrlParams();
-  }, [searchQuery, viewMode, priceRange, selectedCategories, selectedRating, sortOption]);
-
-  // Filter and sort product data
+  
+  const filters = getFiltersFromParams();
+  
+  // Filter product data based on all filter criteria
   const filteredProducts = products.filter((p: Product) => {
-    const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(p.category);
-    const matchesPrice = p.price >= priceRange[0] && p.price <= priceRange[1];
-    const matchesRating = selectedRating === 0 || p.rating >= selectedRating;
+    // Filter by search query
     const matchesSearch = searchQuery === '' || 
       p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.tags.some((tag: string) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-
-    return matchesCategory && matchesPrice && matchesRating && matchesSearch;
+    
+    // Filter by category
+    const categoryFilters = searchParams.get('categories')?.split(',') || [];
+    const matchesCategory = categoryFilters.length === 0 || 
+      categoryFilters.includes(p.category);
+    
+    // Filter by price range
+    const minPrice = parseInt(searchParams.get('minPrice') || '0');
+    const maxPrice = parseInt(searchParams.get('maxPrice') || '1000');
+    const matchesPrice = p.price >= minPrice && p.price <= maxPrice;
+    
+    // Filter by rating
+    const ratingFilter = parseInt(searchParams.get('rating') || '0');
+    const matchesRating = ratingFilter === 0 || p.rating >= ratingFilter;
+    
+    // Filter by brand
+    const brandFilter = searchParams.get('brand');
+    const matchesBrand = !brandFilter || p.brand.toLowerCase() === brandFilter.toLowerCase();
+    
+    // Filter by tags/product types
+    const tagFilters = searchParams.getAll('tag');
+    const matchesTags = tagFilters.length === 0 || 
+      tagFilters.some(tag => p.tags.includes(tag));
+    
+    // Filter by platform
+    const platformFilter = searchParams.get('platform');
+    const matchesPlatform = !platformFilter || 
+      p.platform.toLowerCase() === platformFilter.toLowerCase();
+    
+    // Filter by availability
+    const availabilityFilter = searchParams.get('availability');
+    const matchesAvailability = !availabilityFilter || 
+      (availabilityFilter === 'in-stock' && p.available) ||
+      (availabilityFilter === 'low-stock' && p.available && (p.stock !== undefined && p.stock < 10)) ||
+      (availabilityFilter === 'pre-order' && !p.available);
+    
+    // Filter by shipping
+    const shippingFilter = searchParams.get('shipping');
+    const matchesShipping = !shippingFilter || 
+      (shippingFilter === 'free-shipping' && p.freeShipping);
+    
+    // Filter by deals
+    const dealFilter = searchParams.get('deal');
+    const matchesDeal = !dealFilter || 
+      (dealFilter === 'todays-deals' && p.discount) ||
+      (dealFilter === 'best-price' && p.bestPrice);
+    
+    return matchesSearch && matchesCategory && matchesPrice && 
+           matchesRating && matchesBrand && matchesTags && 
+           matchesPlatform && matchesAvailability && matchesShipping && 
+           matchesDeal;
   });
 
   const sortedProducts = sortProducts(sortOption, filteredProducts);
 
-  // Clear all filters
-  const clearAllFilters = () => {
-    setSearchQuery('');
-    setPriceRange([0, 1000]);
-    setSelectedCategories([]);
-    setSelectedRating(0);
-    setSortOption('relevance');
-  };
+  // Clear all filters by navigating to base URL
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -112,27 +171,20 @@ export default function ProductsPage() {
         </div>
 
         <div className="flex flex-col md:flex-row gap-6">
-          {/* Filter Panel Component */}
-          <FilterPanel 
-            isVisible={isFilterVisible}
-            setIsVisible={setIsFilterVisible}
-            priceRange={priceRange}
-            setPriceRange={setPriceRange}
-            selectedCategories={selectedCategories}
-            setSelectedCategories={setSelectedCategories}
-            selectedRating={selectedRating}
-            setSelectedRating={setSelectedRating}
-            clearAllFilters={clearAllFilters}
-          />
+          {/* Product Type Filter Component - replacing the old FilterPanel */}
+          <div className={`${isFilterVisible ? 'block' : 'hidden'} md:block`}>
+            <ProductTypeFilter
+              filters={filters}
+              categorySlug=""
+            />
+          </div>
 
           {/* Products Display Component */}
-          <ProductsDisplay 
+          <ProductsSection 
             products={sortedProducts}
-            viewMode={viewMode}
           />
         </div>
       </div>
     </div>
   );
 }
-

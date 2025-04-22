@@ -1,13 +1,12 @@
-'ise client';
+'use client';
+import CategorySection from "@/components/layout/markets/CategorySection";
+import DealsSection from "@/components/layout/markets/DealsSection";
+import { MarketplaceSection } from "@/components/layout/markets/MarketplaceSection";
+import ProductsSection from "@/components/product/ProductsSection";
+import { categories, deals, markets } from "@/demoData/Market";
+import { products } from "@/demoData/Products2";
+import { Search } from "lucide-react";
 
-import { categories, deals, markets } from '@/demoData/Market';
-import { Search } from 'lucide-react';
-// Components import
-import { products } from '@/demoData/Products2';
-import CategorySection from './CategorySection';
-import DealsSection from './DealsSection';
-import { MarketplaceSection } from './MarketplaceSection';
-import ProductsSection from './ProductCard';
 
 const MarketplaceHomepage = () => {
   return (

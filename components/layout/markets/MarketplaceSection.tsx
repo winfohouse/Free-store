@@ -1,8 +1,5 @@
-export type market = {
-    id: number;
-    name: string;
-    flag: string;
-}
+import { market } from "@/types/Markets";
+
 type props ={ markets : market[], }
 export function MarketplaceSection({markets}: props){
   return (

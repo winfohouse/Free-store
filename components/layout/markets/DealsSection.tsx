@@ -1,8 +1,5 @@
-export type deal = {
-    id: number;
-    name: string;
-    image: string;
-}
+import { deal } from "@/types/Products";
+
 type props ={ deals: deal[], }
 export default function DealsSection({deals}: props ) {
   return (
