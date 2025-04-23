@@ -1,7 +1,8 @@
 // hooks/useFilters.ts
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams , ReadonlyURLSearchParams} from 'next/navigation';
 import { Product } from '@/types/Products';
+import { products } from '@/demoData/Products2';
 
 export type FilterOption = {
   label: string;
@@ -178,63 +179,7 @@ export const useProductFilters = (products: Product[]) => {
 
   const clearAllFilters = () => setFilters({});
 
-  const filteredProducts = products.filter(product => {
-    for (const [key, value] of Object.entries(filters)) {
-      console.log("key", key, "    ", "value", value);
 
-      if (key === 'price') {
-        const price = product.price;
-        console.log(price);
-
-        if (value === 'under_25' && price >= 25) return false;
-        if (value === '25_50' && (price < 25 || price > 50)) return false;
-        if (value === '50_100' && (price < 50 || price > 100)) return false;
-        if (value === '100_200' && (price < 100 || price > 200)) return false;
-        if (value === 'over_200' && price <= 200) return false;
-      } else if (key === 'discount') {
-        if (!product.discount) return false;
-
-        const discountStr = product.discount.replace('%', '');
-        const discountValue = parseFloat(discountStr);
-        console.log(discountValue);
-        log
-
-        if (value === '0_5' && (discountValue < 0 || discountValue > 5)) return false;
-        if (value === '5_10' && (discountValue <= 5 || discountValue > 10)) return false;
-        if (value === '10_20' && (discountValue <= 10 || discountValue > 20)) return false;
-        if (value === '20_30' && (discountValue <= 20 || discountValue > 30)) return false;
-        if (value === '30_50' && (discountValue <= 30 || discountValue > 50)) return false;
-        if (value === '50_plus' && discountValue <= 50) return false;
-      } else if (key === 'rating') {
-        const rating = product.rating;
-        console.log(product.rating)
-        if (value === '4_and_up' && rating < 4) return false;
-        if (value === '3_and_up' && rating < 3) return false;
-        if (value === '2_and_up' && rating < 2) return false;
-      } else if (key === 'brand' && product.brand.toLowerCase() !== (value as string).toLowerCase()) {
-        console.log(product.brand.toLowerCase());
-        return false;
-      } else if (key === 'platform' && product.platform.toLowerCase() !== (value as string).toLowerCase()) {
-        console.log(product.platform.toLowerCase());
-
-        return false;
-      } else if (key === 'tags') {
-        const productTags = product.tags.map(tag => tag.toLowerCase());
-        if (Array.isArray(value)) {
-          if (!value.every(tag => productTags.includes(tag.toLowerCase()))) return false;
-        } else if (!productTags.includes(value.toLowerCase())) return false;
-      } else if (key === 'availability') {
-        const inStock = product.stock !== undefined ? product.stock > 0 : product.available === true;
-        if (String(inStock) !== value) return false;
-      } else if (key === 'shipping') {
-        if (String(product.freeShipping) !== value) return false;
-      }
-      // Add more filter conditions if needed
-    }
-    console.log(product);
-
-    return true;
-  });
 
   return {
     filters,
@@ -244,15 +189,89 @@ export const useProductFilters = (products: Product[]) => {
     toggleSection,
     removeFilter,
     clearAllFilters,
-    filteredProducts
   };
 };
 
+// Function to remove duplicate products
+export const removeDuplicateProducts = (products: Product[]) => {
+  // Use a Map to track unique products by ID
+  const uniqueProductsMap = new Map();
 
+  // Loop through all products
+  products.forEach(product => {
+    // If this ID hasn't been seen yet, add it to our map
+    if (!uniqueProductsMap.has(product.id)) {
+      uniqueProductsMap.set(product.id, product);
+    }
+  });
 
-function name(platforms: string[], brands: string[], tags: string[]) {
+  // Convert the Map values back to an array
+  return Array.from(uniqueProductsMap.values());
+};
 
-  // Prepare filter sections data
-  return
+export const filterProducts = (filters: Record<string, string | string[]>): Product[] => {
+  if (Object.keys(filters).length === 0) return products;
 
-}
+  return products.filter(product => {
+    for (const [key, value] of Object.entries(filters)) {
+      if (key === 'price') {
+        const price = product.price;
+        if (value === 'under_25' && price >= 25) return false;
+        if (value === '25_50' && (price < 25 || price > 50)) return false;
+        if (value === '50_100' && (price < 50 || price > 100)) return false;
+        if (value === '100_200' && (price < 100 || price > 200)) return false;
+        if (value === 'over_200' && price <= 200) return false;
+      } else if (key === 'discount') {
+        if (!product.discount) return false;
+        const discountValue = parseFloat(product.discount.replace('%', ''));
+        if (value === '0_5' && (discountValue < 0 || discountValue > 5)) return false;
+        if (value === '5_10' && (discountValue <= 5 || discountValue > 10)) return false;
+        if (value === '10_20' && (discountValue <= 10 || discountValue > 20)) return false;
+        if (value === '20_30' && (discountValue <= 20 || discountValue > 30)) return false;
+        if (value === '30_50' && (discountValue <= 30 || discountValue > 50)) return false;
+        if (value === '50_plus' && discountValue <= 50) return false;
+      } else if (key === 'rating') {
+        const rating = product.rating;
+        if (value === '4_and_up' && rating < 4) return false;
+        if (value === '3_and_up' && rating < 3) return false;
+        if (value === '2_and_up' && rating < 2) return false;
+      } else if (key === 'brand') {
+        if (product.brand.toLowerCase() !== (value as string).toLowerCase()) return false;
+      } else if (key === 'platform') {
+        if (product.platform.toLowerCase() !== (value as string).toLowerCase()) return false;
+      } else if (key === 'tags') {
+        const productTags = product.tags.map(tag => tag.toLowerCase());
+        if (Array.isArray(value)) {
+          if (!value.every(tag => productTags.includes(tag.toLowerCase()))) return false;
+        } else {
+          if (!productTags.includes((value as string).toLowerCase())) return false;
+        }
+      } else if (key === 'availability') {
+        const inStock = product.stock !== undefined ? product.stock > 0 : product.available === true;
+        if (String(inStock) !== value) return false;
+      } else if (key === 'shipping') {
+        if (String(product.freeShipping) !== value) return false;
+      }
+    }
+    return true;
+  });
+};
+
+export const getFiltersFromSearchParams = (searchParams: ReadonlyURLSearchParams) => {
+  const filters: Record<string, string | string[]> = {};
+
+  if (searchParams.get('q')) filters.searchQuery = searchParams.get('q')!;
+  if (searchParams.get('sort')) filters.sort = searchParams.get('sort')!;
+  if (searchParams.get('minPrice')) filters.minPrice = searchParams.get('minPrice')!;
+  if (searchParams.get('maxPrice')) filters.maxPrice = searchParams.get('maxPrice')!;
+  if (searchParams.get('categories')) filters.categories = searchParams.get('categories')!.split(',');
+  if (searchParams.get('rating')) filters.rating = searchParams.get('rating')!;
+  if (searchParams.get('brand')) filters.brand = searchParams.get('brand')!;
+  if (searchParams.getAll('tag').length > 0) filters.tags = searchParams.getAll('tag');
+  if (searchParams.get('platform')) filters.platform = searchParams.get('platform')!;
+  if (searchParams.get('availability')) filters.availability = searchParams.get('availability')!;
+  if (searchParams.get('shipping')) filters.shipping = searchParams.get('shipping')!;
+  if (searchParams.get('deal')) filters.deal = searchParams.get('deal')!;
+
+  return filters;
+};

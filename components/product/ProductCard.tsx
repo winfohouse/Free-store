@@ -25,22 +25,13 @@ export default function ProductCard(product: Product ) {
   };
 
   return (
-    <div 
+    <div
       className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 h-full flex flex-col"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="relative block">
         <div className="aspect-video relative overflow-hidden group">
-          {/*<img
-            src={product.images[0] || 'https://placehold.co/400'}
-            alt={product.title}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className={`object-cover transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
-            priority={false}
-            quality={80}
-          />*/}
           <img
             src='https://placehold.co/400'
             alt={product.title}
@@ -50,21 +41,21 @@ export default function ProductCard(product: Product ) {
 
           {/* Overlay with quick actions that appears on hover */}
           <div className={`absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center gap-2 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
-            <button 
+            <button
               onClick={handleQuickView}
               className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors"
               aria-label="Quick view"
             >
               <Eye size={18} />
             </button>
-            <button 
+            <button
               onClick={handleAddToCart}
               className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors"
               aria-label="Add to cart"
             >
               <ShoppingCart size={18} />
             </button>
-            <button 
+            <button
               onClick={handleWishlistToggle}
               className={`rounded-full p-2 transition-colors ${isWishlisted ? 'bg-red-500 text-white' : 'bg-white text-gray-800 hover:bg-red-500 hover:text-white'}`}
               aria-label="Add to wishlist"
@@ -129,8 +120,8 @@ export default function ProductCard(product: Product ) {
         <div className="flex items-center mb-2 mt-auto">
           <div className="flex text-yellow-400">
             {[...Array(5)].map((_, i) => (
-              <Star 
-                key={i} 
+              <Star
+                key={i}
                 size={16}
                 className={`${i < Math.round(product.rating) ? 'text-yellow-400' : 'text-gray-300'}`}
                 fill="currentColor"
@@ -161,13 +152,13 @@ export default function ProductCard(product: Product ) {
         </div>
 
         <div className="mt-3 flex gap-2">
-          <Link 
-            href={`/product/${product.id}`} 
+          <Link
+            href={`/product/${product.id}`}
             className="text-blue-600 text-sm font-medium hover:underline flex-grow text-center py-1 border border-blue-600 rounded hover:bg-blue-50 transition-colors"
           >
             View Details
           </Link>
-          <button 
+          <button
             onClick={handleAddToCart}
             className="bg-blue-600 text-white text-sm py-1 px-3 rounded hover:bg-blue-700 transition-colors flex items-center justify-center"
             disabled={!product.available}

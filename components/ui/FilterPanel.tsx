@@ -138,7 +138,6 @@ export default function ProductTypeFilter({ products, onFiltersChange }: Product
     toggleSection,
     removeFilter,
     clearAllFilters,
-    filteredProducts
   } = useProductFilters(products);
 
   // Notify parent component when filters change
