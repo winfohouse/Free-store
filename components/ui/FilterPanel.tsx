@@ -1,5 +1,3 @@
-
-'use client'
 import { FilterOption } from '@/types/FilterPanel';
 import { Product } from '@/types/Products';
 import { useProductFilters } from '@/utily/FilterPanel';
@@ -88,7 +86,6 @@ const FilterSection: React.FC<FilterSectionProps> = ({
   expanded,
   toggleSection,
   options,
-  filterKey,
   activeValue,
   onFilterChange,
 }) => (
@@ -140,10 +137,10 @@ export default function ProductTypeFilter({ products, onFiltersChange }: Product
     clearAllFilters,
   } = useProductFilters(products);
 
-  // Notify parent component when filters change
+// Notify parent component when filters change
   useEffect(() => {
     onFiltersChange(filters);
-  }, [filters, onFiltersChange]);
+  }, [filters]);
 
   return (
     <div className="bg-white rounded-lg shadow p-4">

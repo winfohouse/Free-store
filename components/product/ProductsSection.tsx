@@ -5,9 +5,9 @@ import { Product } from "@/types/Products";
 import { removeDuplicateProducts } from "@/utily/FilterPanel";
 import { useEffect, useState } from "react";
 
-type props ={ products: Product[], };
+type props = { products: Product[], };
 
-export default function ProductsSection({products}: props) {
+export default function ProductsSection({ products }: props) {
   const [filter, setFilter] = useState('all');
   const [filteredProducts, setFilteredProducts] = useState(removeDuplicateProducts(products));
 
@@ -22,31 +22,10 @@ export default function ProductsSection({products}: props) {
   return (
     <div className="py-6">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-          <h2 className="text-xl font-bold mb-2 md:mb-0">Popular Products</h2>
-          <div className="flex flex-wrap gap-2">
-            <button
-              className={`px-3 py-1 rounded-full text-sm ${filter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
-              onClick={() => setFilter('all')}
-            >
-              All
-            </button>
-            {categories.slice(0, 5).map(category => (
-              <button
-                key={category.id}
-                className={`px-3 py-1 rounded-full text-sm ${filter === category.name ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
-                onClick={() => setFilter(category.name)}
-              >
-                {category.name}
-              </button>
-            ))}
-          </div>
-        </div>
-
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
-          {filteredProducts.map(product => (
-            <ProductCard key={product.id} {...product} />
-          ))}
+          {filteredProducts.map(product => <ProductCard key={product.id} {...product} />)
+          }
+          {(filteredProducts.length == 0) && <h2 className="px-6 py-2 text-center text-gray-100">No Product Found!</h2>}
         </div>
 
         <div className="text-center mt-8">

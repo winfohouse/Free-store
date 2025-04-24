@@ -5,12 +5,11 @@ import ViewToggle from '@/components/layout/search/ViewToggle';
 import ProductsSection from '@/components/product/ProductsSection';
 import ProductTypeFilter from '@/components/ui/FilterPanel'; // Import our new filter component
 
-import { sortProducts } from '@/demoData/Products';
 import { products } from '@/demoData/Products2';
 import { Product } from '@/types/Products';
 import { filterProducts, getFiltersFromSearchParams } from '@/utily/FilterPanel';
 import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function ProductsPage() {
   const searchParams = useSearchParams();
@@ -23,13 +22,22 @@ export default function ProductsPage() {
 
   const [searchQuery, setSearchQuery] = useState(filters.searchQuery || '');
   const [sortOption, setSortOption] = useState<string>(filters.sort || 'relevance');
-  
+
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
-  
+
   const handleFiltersChange = (filters: Record<string, string | string[]>) => {
-    const filtered = filterProducts(filters);
+    const filtered = filterProducts(filters, searchQuery);
     setFilteredProducts(filtered);
   };
+
+const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value.toLowerCase())  
+};
+
+useEffect(() => {
+  console.log("filteredProducts updated:", filteredProducts);
+}, [filteredProducts]);
+
   return (
     <div className="bg-gray-100 min-h-screen">
       <div className="container mx-auto py-6 px-4">
@@ -40,6 +48,7 @@ export default function ProductsPage() {
           setSearchQuery={setSearchQuery}
           sortOption={sortOption}
           setSortOption={setSortOption}
+          handleSearch={handleSearch}
         />
 
         <div className="flex flex-wrap justify-between items-center mb-6">
@@ -59,7 +68,7 @@ export default function ProductsPage() {
             <ProductTypeFilter products={products} onFiltersChange={handleFiltersChange} />
           </div>
 
-          <ProductsSection products={filteredProducts} />
+           <ProductsSection products={filteredProducts} />
         </div>
       </div>
     </div>

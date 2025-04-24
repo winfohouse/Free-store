@@ -1,32 +1,33 @@
 // SearchBar.tsx
 import { Search } from 'lucide-react';
-import { Dispatch, SetStateAction, FormEvent } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 
 interface SearchBarProps {
   searchQuery: string;
   setSearchQuery: Dispatch<SetStateAction<string>>;
   sortOption: string;
-  setSortOption: Dispatch<SetStateAction<string>>;
+  setSortOption: React.Dispatch<SetStateAction<string>>;
+  handleSearch: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export default function SearchBar({ 
-  searchQuery, 
-  setSearchQuery, 
-  sortOption, 
-  setSortOption 
+export default function SearchBar({
+  searchQuery,
+  setSearchQuery,
+  sortOption,
+  setSortOption,
+  handleSearch
 }: SearchBarProps) {
-  const handleSearchSubmit = (e: FormEvent) => {
-    e.preventDefault();
-  };
 
   return (
     <div className="mb-6">
-      <form onSubmit={handleSearchSubmit} className="flex items-center">
         <div className="relative flex-grow">
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              setSearchQuery(e.target.value)
+              handleSearch(e)
+            }}
             placeholder="Search products..."
             className="w-full py-2 px-4 pr-10 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -34,7 +35,7 @@ export default function SearchBar({
             <Search size={20} className="text-gray-500" />
           </button>
         </div>
-        <select 
+        <select
           className="p-2 border border-l-0 rounded-r-lg bg-white"
           value={sortOption}
           onChange={(e) => setSortOption(e.target.value)}
@@ -45,7 +46,6 @@ export default function SearchBar({
           <option value="rating">Highest Rating</option>
           <option value="reviews">Most Reviews</option>
         </select>
-      </form>
     </div>
   );
 }

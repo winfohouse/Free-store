@@ -36,6 +36,7 @@ export const generateFilterSections = (products: Product[]): FilterSectionData[]
   const tags = extractUniqueValues(products, 'tags');
   const platforms = extractUniqueValues(products, 'platform');
   const brands = extractUniqueValues(products, 'brand');
+  const categories = extractUniqueValues(products, 'category'); 
 
   return [
     {
@@ -49,6 +50,11 @@ export const generateFilterSections = (products: Product[]): FilterSectionData[]
         { label: '30% - 50%', value: '30_50' },
         { label: '50% & Above', value: '50_plus' }
       ]
+    },
+    {
+      id: 'category',
+      title: 'Category',
+      options: categories.map(category => ({ label: category, value: category.toLowerCase() }))
     },
     {
       id: 'platform',
@@ -127,7 +133,7 @@ export const useProductFilters = (products: Product[]) => {
       }
     });
     setFilters(initialFilters);
-  }, [searchParams]);
+  }, []);
 
   // Toggle a section's expanded state
   const toggleSection = (section: string) => {
@@ -209,10 +215,13 @@ export const removeDuplicateProducts = (products: Product[]) => {
   return Array.from(uniqueProductsMap.values());
 };
 
-export const filterProducts = (filters: Record<string, string | string[]>): Product[] => {
+export const filterProducts = (filters: Record<string, string | string[]>, searchParam: string = ''): Product[] => {
   if (Object.keys(filters).length === 0) return products;
 
   return products.filter(product => {
+
+    if ((searchParam !== '') && !(product.title.toLowerCase().includes(searchParam))) return false;
+
     for (const [key, value] of Object.entries(filters)) {
       if (key === 'price') {
         const price = product.price;
@@ -237,6 +246,8 @@ export const filterProducts = (filters: Record<string, string | string[]>): Prod
         if (value === '2_and_up' && rating < 2) return false;
       } else if (key === 'brand') {
         if (product.brand.toLowerCase() !== (value as string).toLowerCase()) return false;
+      } else if (key === 'category') {
+        if (product.category.toLowerCase() !== (value as string).toLowerCase()) return false;
       } else if (key === 'platform') {
         if (product.platform.toLowerCase() !== (value as string).toLowerCase()) return false;
       } else if (key === 'tags') {
