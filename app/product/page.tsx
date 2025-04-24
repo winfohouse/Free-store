@@ -1,5 +1,4 @@
 'use client'
-
 import { FrequentlyBoughtTogether } from '@/components/product/ProductCard';
 import { products } from '@/demoData/Products2';
 import {
@@ -80,7 +79,7 @@ export default function ProductDetailPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
         <h1 className="text-2xl font-bold mb-2">Product Not Found</h1>
-        <p className="text-gray-600 mb-4">The product you're looking for doesn't exist or has been removed.</p>
+        <p className="text-gray-600 mb-4">The product you&apos;re looking for doesn&apos;t exist or has been removed.</p>
         <Link href="/products" className="text-blue-600 hover:underline flex items-center">
           <ArrowLeft size={16} className="mr-1" />
           Back to Products

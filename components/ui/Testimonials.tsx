@@ -13,7 +13,7 @@ export default function Testimonials(){
                   ))}
                 </div>
                 <p className="text-gray-600 mb-4">
-                  "This site saved me $50 last week! I was about to buy a pair of headphones from my usual store when I decided to check here first. Found the same model for much less."
+                  &quot;This site saved me $50 last week! I was about to buy a pair of headphones from my usual store when I decided to check here first. Found the same model for much less.&quot;
                 </p>
                 <div className="flex items-center">
                   <div className="bg-gray-200 rounded-full w-10 h-10 flex items-center justify-center mr-3">
@@ -34,7 +34,7 @@ export default function Testimonials(){
                   ))}
                 </div>
                 <p className="text-gray-600 mb-4">
-                  "I love how simple it is to compare prices. Before this, I had to open multiple tabs and manually compare. Now everything is in one place. Such a time saver!"
+                  &quot;I love how simple it is to compare prices. Before this, I had to open multiple tabs and manually compare. Now everything is in one place. Such a time saver!&quot;
                 </p>
                 <div className="flex items-center">
                   <div className="bg-gray-200 rounded-full w-10 h-10 flex items-center justify-center mr-3">
@@ -58,7 +58,7 @@ export default function Testimonials(){
                   </svg>
                 </div>
                 <p className="text-gray-600 mb-4">
-                  "The price history feature is what sets this site apart. I can see when prices drop and make smarter buying decisions. Found a great deal on a TV when the price hit a 6-month low."
+                  &quot;The price history feature is what sets this site apart. I can see when prices drop and make smarter buying decisions. Found a great deal on a TV when the price hit a 6-month low.&quot;
                 </p>
                 <div className="flex items-center">
                   <div className="bg-gray-200 rounded-full w-10 h-10 flex items-center justify-center mr-3">

@@ -118,7 +118,7 @@ const Footer: FC = () => {
           <div>
             <h3 className="font-bold mb-4 text-lg">Quick Links</h3>
             <ul className="space-y-2 text-gray-400 text-sm">
-              <li><Link href="/deals" className="hover:text-white transition-colors">Today's Deals</Link></li>
+              <li><Link href="/deals" className="hover:text-white transition-colors">Today&apos;s Deals</Link></li>
               <li><Link href="/bestsellers" className="hover:text-white transition-colors">Best Sellers</Link></li>
               <li><Link href="/new" className="hover:text-white transition-colors">New Arrivals</Link></li>
               <li><Link href="/membership" className="hover:text-white transition-colors">Membership & Rewards</Link></li>

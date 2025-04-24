@@ -1,4 +1,5 @@
 // hooks/useFilters.ts
+"use client"
 import { useState, useEffect } from 'react';
 import { useSearchParams , ReadonlyURLSearchParams} from 'next/navigation';
 import { Product } from '@/types/Products';
