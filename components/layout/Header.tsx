@@ -20,6 +20,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import SidebarCart from "../ui/SidebarCart";
+import { extractUniqueValues } from "@/utily/objectHandel";
+import { products } from "@/demoData/Products2";
 
 // Define types for categories
 interface Category {
@@ -51,9 +53,9 @@ const Navbar = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   // UI state for indicators
-  const [cartCount, setCartCount] = useState(3);
-  const [wishlistCount, setWishlistCount] = useState(5);
-  const [notificationCount, setNotificationCount] = useState(2);
+  const [cartCount, setCartCount] = useState(0);
+  const [wishlistCount, setWishlistCount] = useState(0);
+  const [notificationCount, setNotificationCount] = useState(0);
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('cart');
@@ -62,23 +64,8 @@ const Navbar = () => {
   const accountDropdownRef = useRef<HTMLDivElement>(null);
   const categoryDropdownRef = useRef<HTMLDivElement>(null);
 
-
-
-  const pathname = usePathname();
-  const router = useRouter();
-
-  // Hide navbar on specific routes
-  const hiddenRoutes = ["/login", "/signup", "/dashboard"];
-  if (hiddenRoutes.includes(pathname as string)) return null;
-
   // Sample search suggestions
-  const popularSearches = [
-    "Wireless Earbuds",
-    "Smart Watches",
-    "Gaming Laptops",
-    "4K Monitors",
-    "Fitness Trackers"
-  ];
+  const popularSearches = extractUniqueValues(products, "title")
 
   // Simulate search suggestions
   useEffect(() => {
@@ -116,6 +103,7 @@ const Navbar = () => {
       }
     };
 
+
     window.addEventListener('scroll', handleScroll);
     document.addEventListener("mousedown", handleClickOutside);
 
@@ -125,6 +113,19 @@ const Navbar = () => {
     };
   }, []);
 
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchQuery.trim() !== "") {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setIsSearchFocused(false);
+    }
+  };
+
+  // Hide navbar on specific routes
+  const hiddenRoutes = ["/login", "/signup", "/dashboard"];
+  if (hiddenRoutes.includes(pathname as string)) return null;
   // Handle logout
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -211,30 +212,44 @@ const Navbar = () => {
                 </div>
               )}
 
-              <Link href="/category" className="px-3 py-2 hover:bg-blue-600 rounded-md">Deals</Link>
+              <Link href="/categories" className="px-3 py-2 hover:bg-blue-600 rounded-md">Deals</Link>
             </div>
           </div>
 
-          <div className="flex-1 mx-4 hidden md:block relative">
+          <div
+            className={`flex-1 mx-4 hidden md:block transition-all duration-500 ease-in-out ${isSearchFocused ? "absolute left-4 right-4 top-4 z-40" : "relative"}`}
+          >
             <div className="relative">
               <input
                 type="text"
                 placeholder="Search for products, brands, and more..."
-                className="w-full py-2 px-4 rounded-lg text-black"
+                className="w-full py-2 px-4 rounded-lg text-black transition-all duration-300 ease-in-out"
                 onFocus={() => setIsSearchFocused(true)}
-                onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+                onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)} // keep this on input only
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
+                enterKeyHint="search"
+                inputMode="search"
               />
-              <button className="absolute right-2 top-2 text-gray-500">
+              <button className="absolute right-2 top-2 bg-white text-gray-500">
                 <Search size={20} />
               </button>
             </div>
 
-            {isSearchFocused && searchSuggestions.length > 0 && (
-              <div className="absolute w-full bg-white mt-1 rounded-lg shadow-lg z-30 text-black py-2">
+            {isSearchFocused && (
+              <div
+                className="absolute w-full bg-white mt-1 rounded-lg shadow-lg z-30 text-black py-2 transition-all duration-300 ease-in-out"
+                onMouseDown={(e) => e.preventDefault()} // prevent input blur before click
+              >
                 {searchSuggestions.map((suggestion, idx) => (
-                  <div key={idx} className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                  <div
+                    key={idx}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => {
+                      router.push(`/search?q=${encodeURIComponent(suggestion)}`);
+                    }}
+                  >
                     {suggestion}
                   </div>
                 ))}
@@ -242,9 +257,14 @@ const Navbar = () => {
                   <p className="text-sm font-medium">Popular Searches</p>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {popularSearches.slice(0, 3).map((term, idx) => (
-                      <span key={idx} className="bg-gray-100 px-2 py-1 rounded-full text-sm hover:bg-gray-200 cursor-pointer">
+                      <Link
+                        href={`/search?q=${term}`}
+                        key={idx}
+                        className="bg-gray-100 px-2 py-1 rounded-full text-sm hover:bg-gray-200 cursor-pointer"
+                        onClick={() => setIsSearchFocused(false)} // optional: close dropdown after click
+                      >
                         {term}
-                      </span>
+                      </Link>
                     ))}
                   </div>
                 </div>

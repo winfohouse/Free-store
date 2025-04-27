@@ -58,7 +58,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-3xl font-bold">Trending Products</h2>
-            <Link href="/products/trending" className="text-blue-600 hover:underline">
+            <Link href="/categoris" className="text-blue-600 hover:underline">
               View All
             </Link>
           </div>

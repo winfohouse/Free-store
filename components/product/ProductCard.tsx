@@ -5,9 +5,9 @@ import { Award, Eye, Heart, ShoppingCart, Star, Tag } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
-type FrequentlyBoughtTogetherProps ={ image: string, alt: string, price: number };
+type FrequentlyBoughtTogetherProps = { image: string, alt: string, price: number };
 
-export default function ProductCard(product: Product ) {
+export default function ProductCard(product: Product) {
   const [isHovered, setIsHovered] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
 
@@ -24,6 +24,9 @@ export default function ProductCard(product: Product ) {
     // Wishlist toggle implementation
   };
 
+const handleErrorImg = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+  e.currentTarget.src = "";
+};
   return (
     <div
       className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 h-full flex flex-col"
@@ -33,10 +36,11 @@ export default function ProductCard(product: Product ) {
       <div className="relative block">
         <div className="aspect-video relative overflow-hidden group">
           <img
-            src='https://placehold.co/400'
+            src={product.images[1]}
+            onError={handleErrorImg}
             alt={product.title}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className={`object-cover transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
+            className={`object-cover bg-gray-200 transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
           />
 
           {/* Overlay with quick actions that appears on hover */}
@@ -91,7 +95,7 @@ export default function ProductCard(product: Product ) {
         {/* Platform badge */}
         <div className="absolute top-2 right-2 bg-white rounded-full p-1 shadow">
           <img
-            src={product.platformIcon || '/placeholder-icon.png'}
+            src={product.platformIcon}
             alt={product.platform}
             width={24}
             height={24}
@@ -142,8 +146,8 @@ export default function ProductCard(product: Product ) {
                 </span>
               </div>
             ) : (
-                <span className="text-gray-900 font-bold">${product.price.toFixed(2)}</span>
-              )}
+              <span className="text-gray-900 font-bold">${product.price.toFixed(2)}</span>
+            )}
           </div>
 
           <div className="text-sm text-blue-600">
@@ -151,13 +155,12 @@ export default function ProductCard(product: Product ) {
           </div>
         </div>
 
-        <div className="mt-3 flex gap-2">
-          <Link
-            href={`/product/${product.id}`}
-            className="text-blue-600 text-sm font-medium hover:underline flex-grow text-center py-1 border border-blue-600 rounded hover:bg-blue-50 transition-colors"
+        <Link className="mt-3 flex gap-2"
+          href={product.ctaLink ?? `/products/${product.id}`}>
+          <span className="text-blue-600 text-sm font-medium hover:underline flex-grow text-center py-1 border border-blue-600 rounded hover:bg-blue-50 transition-colors"
           >
             View Details
-          </Link>
+          </span>
           <button
             onClick={handleAddToCart}
             className="bg-blue-600 text-white text-sm py-1 px-3 rounded hover:bg-blue-700 transition-colors flex items-center justify-center"
@@ -166,13 +169,13 @@ export default function ProductCard(product: Product ) {
             <ShoppingCart size={16} className="mr-1" />
             <span>Add</span>
           </button>
-        </div>
+        </Link>
       </div>
     </div>
   );
 }
 
-export function FrequentlyBoughtTogether({image, alt, price}: FrequentlyBoughtTogetherProps) {
+export function FrequentlyBoughtTogether({ image, alt, price }: FrequentlyBoughtTogetherProps) {
   return (
     <div className="w-20 h-20 bg-gray-50 flex flex-col items-center justify-center space-y-4">
       <img

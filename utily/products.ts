@@ -1,6 +1,6 @@
 import { Product } from "@/types/Products";
 
-type GroupedResult<K extends keyof Product> = {
+export type GroupedResult<K extends keyof Product> = {
   [key in K]: string;
 } & {
   products: Product[];
@@ -31,3 +31,15 @@ export function getProductsBy<K extends keyof Product>(
 
   return result;
 }
+
+
+// Price formatter
+export function formatPrice(price: number) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2
+  }).format(price);
+};
+
+

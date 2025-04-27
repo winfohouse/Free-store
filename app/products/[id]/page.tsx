@@ -1,5 +1,6 @@
 'use client'
 import { FrequentlyBoughtTogether } from '@/components/product/ProductCard';
+import BreadcrumbNav from '@/components/ui/BreadcrumbNav';
 import { products } from '@/demoData/Products2';
 import {
   calculateBundlePrice,
@@ -25,13 +26,11 @@ import {
   Truck
 } from 'lucide-react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-export default function ProductDetailPage() {
-  const searchParams = useSearchParams();
-  const productId = searchParams.get('id');
-  
+type props ={params: {id: string}} 
+export default function ProductDetailPage({params} :props) {
+  const productId = params.id; 
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -47,7 +46,7 @@ export default function ProductDetailPage() {
     const loadProduct = async () => {
       setLoading(true);
       try {
-        const data = products.find(p => p.id === productId);
+        const data = products.find(p => p.id == productId);
         data && setProduct(data);
 
         // Set default selections
@@ -80,7 +79,7 @@ export default function ProductDetailPage() {
       <div className="flex flex-col items-center justify-center min-h-screen">
         <h1 className="text-2xl font-bold mb-2">Product Not Found</h1>
         <p className="text-gray-600 mb-4">The product you&apos;re looking for doesn&apos;t exist or has been removed.</p>
-        <Link href="/products" className="text-blue-600 hover:underline flex items-center">
+        <Link href="/categories" className="text-blue-600 hover:underline flex items-center">
           <ArrowLeft size={16} className="mr-1" />
           Back to Products
         </Link>
@@ -92,26 +91,13 @@ export default function ProductDetailPage() {
     <>
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Breadcrumb navigation */}
-        <nav className="mb-6 text-sm">
-          <ol className="flex items-center space-x-1">
-            <li>
-              <Link href="/" className="text-gray-500 hover:text-gray-700">Home</Link>
-            </li>
-            <ChevronRight size={16} className="text-gray-400" />
-            <li>
-              <Link href="/products" className="text-gray-500 hover:text-gray-700">Products</Link>
-            </li>
-            <ChevronRight size={16} className="text-gray-400" />
-            <li>
-              <Link href={product.category ? `/category/${product.category.toLowerCase()}` : "/products"} className="text-gray-500 hover:text-gray-700">
-                {product.category || 'All Products'}
-              </Link>
-            </li>
-            <ChevronRight size={16} className="text-gray-400" />
-            <li className="text-gray-900 font-medium truncate max-w-xs">{product.title}</li>
-          </ol>
-        </nav>
-
+          <BreadcrumbNav
+            items={[
+              { label: "Home", href: "/" },
+              { label: "categories", href: `/categories/${product.category}` },
+              { label: product.title, href: null }  // Current page
+            ]}
+          />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Product Images */}
           <div className="space-y-4">
@@ -119,7 +105,7 @@ export default function ProductDetailPage() {
               <img
                 src={product.images[activeImageIndex]}
                 alt={product.title}
-                className="object-cover"
+                className="object-contain max-h-[100%] ml-[25%] mr-[25%] bg-gray-400"
               />
 
               {/* Navigation arrows for images */}
@@ -157,7 +143,7 @@ export default function ProductDetailPage() {
                     <img
                       src={img}
                       alt={`${product.title} - Image ${index + 1}`}
-                      className="object-cover h-full w-full"
+                      className="object-contain bg-gray-400 h-full w-full"
                     />
                   </button>
                 ))}

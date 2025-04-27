@@ -14,8 +14,10 @@ export default function CategoryPage() {
           <div className="py-6" key={group.category}>
             <div className="container mx-auto px-4">
               <div className="flex justify-between">
-                <h2 className="text-xl font-bold mb-4">{group.category}</h2>
-                <Link className="bold text-blue-600" href={`./${group.category}/`}>See More</Link>
+                <h2 className="text-xl font-bold mb-4 capitalize">
+                  {group.category}
+                </h2>
+                <Link className="bold text-blue-600" href={`/categories/${group.category}/`}>See More</Link>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
                 {group.products.map(product => (

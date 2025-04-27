@@ -2,7 +2,7 @@ import CategorySection from "@/components/layout/markets/CategorySection";
 import DealsSection from "@/components/layout/markets/DealsSection";
 import { MarketplaceSection } from "@/components/layout/markets/MarketplaceSection";
 import ProductCard from "@/components/product/ProductCard";
-import { categories, deals, markets } from "@/demoData/Market";
+import {categories, deals, markets } from "@/demoData/Market";
 import { products } from "@/demoData/Products2";
 import { getProductsBy } from "@/utily/products";
 import { Search } from "lucide-react";

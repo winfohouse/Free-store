@@ -3,40 +3,41 @@
 import SearchBar from '@/components/layout/search/SearchBar';
 import ViewToggle from '@/components/layout/search/ViewToggle';
 import ProductsSection from '@/components/product/ProductsSection';
-import ProductTypeFilter from '@/components/ui/FilterPanel'; // Import our new filter component
+import FilterPanel from '@/components/ui/FilterPanel';
 
-import { products } from '@/demoData/Products2';
 import { Product } from '@/types/Products';
-import { filterProducts, getFiltersFromSearchParams } from '@/utily/FilterPanel';
+import { filterProducts, useProductFilters } from '@/utily/FilterPanel';
+
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 export default function ProductsPage() {
   const searchParams = useSearchParams();
+  const productFilters = useProductFilters();
 
-  const filters = getFiltersFromSearchParams(searchParams);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>(
     searchParams.get('view') === 'list' ? 'list' : 'grid'
   );
   const [isFilterVisible, setIsFilterVisible] = useState(true);
 
-  const [searchQuery, setSearchQuery] = useState(filters.searchQuery || '');
-  const [sortOption, setSortOption] = useState<string>(filters.sort || 'relevance');
+  const [searchQuery, setSearchQuery] = useState(decodeURIComponent((typeof productFilters.filters.searchQuery === "string") ? productFilters.filters.searchQuery : ''));
+  const [sortOption, setSortOption] = useState<string>((typeof productFilters.filters.sort === "string") ? productFilters.filters.sort : 'relevance');
 
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>();
 
-  const handleFiltersChange = (filters: Record<string, string | string[]>) => {
-    const filtered = filterProducts(filters, searchQuery);
-    setFilteredProducts(filtered);
+  // Notify parent component when filters change
+  useEffect(() => {
+    productFilters.updateFilter("q", searchQuery);
+    console.log("page", {"search" : searchQuery, "filters": productFilters.filters})
+  }, [searchQuery]);
+    
+  useEffect(()=> {
+    setFilteredProducts(filterProducts(productFilters.filters, searchQuery));
+    },[productFilters.filters, searchQuery]);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value.toLowerCase())
   };
-
-const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value.toLowerCase())  
-};
-
-useEffect(() => {
-  console.log("filteredProducts updated:", filteredProducts);
-}, [filteredProducts]);
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -65,10 +66,10 @@ useEffect(() => {
 
         <div className="flex flex-col md:flex-row gap-6">
           <div className={`${isFilterVisible ? 'block' : 'hidden'} md:block`}>
-            <ProductTypeFilter products={products} onFiltersChange={handleFiltersChange} />
+            <FilterPanel {...productFilters}/>
           </div>
 
-           <ProductsSection products={filteredProducts} />
+          <ProductsSection products={filteredProducts ?? []} />
         </div>
       </div>
     </div>

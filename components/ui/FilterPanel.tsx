@@ -1,8 +1,6 @@
-import { FilterOption } from '@/types/FilterPanel';
-import { Product } from '@/types/Products';
+import { FilterOption, FilterSectionData } from '@/types/FilterPanel';
 import { useProductFilters } from '@/utily/FilterPanel';
 import { ChevronDown, Sliders, X } from 'lucide-react';
-import { useEffect } from 'react';
 
 // FilterButton Component
 type FilterButtonProps = {
@@ -120,27 +118,25 @@ const FilterSection: React.FC<FilterSectionProps> = ({
   </div>
 );
 
-// Main Component
-interface ProductTypeFilterProps {
-  products: Product[];
-  onFiltersChange: (filters: Record<string, string | string[]>) => void;
+type FilterPanelProps = {
+  filters: Record<string, string | string[]>,
+  expandedSections: Record<string, boolean>,
+  filterSections: FilterSectionData[],
+  updateFilter: (key: string, value: string) => void,
+  toggleSection: (section: string) => void,
+  removeFilter: (key: string) => void,
+  clearAllFilters: () => void,
 }
-
-export default function ProductTypeFilter({ products, onFiltersChange }: ProductTypeFilterProps) {
-  const {
-    filters,
-    expandedSections,
-    filterSections,
-    updateFilter,
-    toggleSection,
-    removeFilter,
-    clearAllFilters,
-  } = useProductFilters(products);
-
-// Notify parent component when filters change
-  useEffect(() => {
-    onFiltersChange(filters);
-  }, [filters]);
+// Main Component
+export default function FilterPanel({
+  filters,
+  expandedSections,
+  filterSections,
+  updateFilter,
+  toggleSection,
+  removeFilter,
+  clearAllFilters,
+}: FilterPanelProps) {
 
   return (
     <div className="bg-white rounded-lg shadow p-4">

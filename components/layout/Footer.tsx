@@ -1,5 +1,5 @@
 "use client";
-
+import { categoryLinks, platformsLinks } from "@/demoData/Products2";
 import Image from "next/image";
 import Link from "next/link";
 import { FC, useState } from "react";
@@ -16,12 +16,13 @@ const Footer: FC = () => {
   const [selectedCountry, setSelectedCountry] = useState("US");
   const [showCountrySelector, setShowCountrySelector] = useState(false);
 
+  let url = (code: string) => `https://flagcdn.com/${code.toLowerCase()}.svg`;
   const countries: Country[] = [
-    { code: "US", name: "United States", flag: "/api/placeholder/20/15" },
-    { code: "CA", name: "Canada", flag: "/api/placeholder/20/15" },
-    { code: "UK", name: "United Kingdom", flag: "/api/placeholder/20/15" }, 
-    { code: "AU", name: "Australia", flag: "/api/placeholder/20/15" },
-    { code: "DE", name: "Germany", flag: "/api/placeholder/20/15" },
+    { code: "US", name: "United States", flag: url("US") },
+    { code: "CA", name: "Canada", flag: url("CA") },
+    { code: "UK", name: "United Kingdom", flag: url("UK") },
+    { code: "AU", name: "Australia", flag: url("AU") },
+    { code: "DE", name: "Germany", flag: url("DE") },
   ];
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,8 +73,8 @@ const Footer: FC = () => {
                 required
                 className="px-4 py-2 rounded-l text-gray-900 w-full md:w-64"
               />
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-medium px-4 py-2 rounded-r transition-colors"
               >
                 Subscribe
@@ -90,17 +91,31 @@ const Footer: FC = () => {
           <div>
             <h3 className="font-bold mb-4 text-lg">Shop By Department</h3>
             <ul className="space-y-2 text-gray-400 text-sm">
-              <li><Link href="/electronics" className="hover:text-white transition-colors">Electronics</Link></li>
-              <li><Link href="/clothing" className="hover:text-white transition-colors">Clothing & Fashion</Link></li>
-              <li><Link href="/home" className="hover:text-white transition-colors">Home & Kitchen</Link></li>
-              <li><Link href="/toys" className="hover:text-white transition-colors">Toys & Games</Link></li>
-              <li><Link href="/books" className="hover:text-white transition-colors">Books & Media</Link></li>
-              <li><Link href="/health" className="hover:text-white transition-colors">Health & Beauty</Link></li>
-              <li><Link href="/sports" className="hover:text-white transition-colors">Sports & Outdoors</Link></li>
+              {categoryLinks.map(({ name, slug, href }) => (
+                <li key={href}>
+                  <Link href={href} className="hover:text-white capitalize transition-colors">
+                    {name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Column 2 */}
+          <div>
+            <h3 className="font-bold mb-4 text-lg">Shop By Market</h3>
+            <ul className="space-y-2 text-gray-400 text-sm">
+              {platformsLinks.map(({ name, slug, href }) => (
+                <li key={href}>
+                  <Link href={href} className="hover:text-white capitalize transition-colors">
+                    {name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 3 */}
           <div>
             <h3 className="font-bold mb-4 text-lg">Customer Service</h3>
             <ul className="space-y-2 text-gray-400 text-sm">
@@ -114,21 +129,21 @@ const Footer: FC = () => {
             </ul>
           </div>
 
-          {/* Column 3 */}
+          {/* Column 4 */}
           <div>
             <h3 className="font-bold mb-4 text-lg">Quick Links</h3>
             <ul className="space-y-2 text-gray-400 text-sm">
-              <li><Link href="/deals" className="hover:text-white transition-colors">Today&apos;s Deals</Link></li>
-              <li><Link href="/bestsellers" className="hover:text-white transition-colors">Best Sellers</Link></li>
+              <li><Link href="/categories" className="hover:text-white transition-colors">Today&apos;s Deals</Link></li>
+              {/* <li><Link href="/bestsellers" className="hover:text-white transition-colors">Best Sellers</Link></li>
               <li><Link href="/new" className="hover:text-white transition-colors">New Arrivals</Link></li>
               <li><Link href="/membership" className="hover:text-white transition-colors">Membership & Rewards</Link></li>
               <li><Link href="/gift-cards" className="hover:text-white transition-colors">Gift Cards</Link></li>
               <li><Link href="/sell" className="hover:text-white transition-colors">Sell on MarketWorld</Link></li>
-              <li><Link href="/affiliate" className="hover:text-white transition-colors">Affiliate Program</Link></li>
+              <li><Link href="/affiliate" className="hover:text-white transition-colors">Affiliate Program</Link></li> */}
             </ul>
           </div>
 
-          {/* Column 4 */}
+          {/* Column 5 */}
           <div>
             <h3 className="font-bold mb-4 text-lg">About MarketWorld</h3>
             <ul className="space-y-2 text-gray-400 text-sm">
@@ -142,11 +157,11 @@ const Footer: FC = () => {
             </ul>
           </div>
 
-          {/* Column 5 */}
+          {/* Column 6 */}
           <div>
             <h3 className="font-bold mb-4 text-lg">Download Our App</h3>
             <p className="text-gray-400 text-sm mb-4">Shop anytime, anywhere with our mobile app.</p>
-            <div className="flex flex-col space-y-3">
+            {/* <div className="flex flex-col space-y-3">
               <Link href="/ios-app" className="bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded flex items-center transition-colors">
                 <Image src="/api/placeholder/24/24" width={24} height={24} alt="App Store" className="mr-2" />
                 <div>
@@ -161,7 +176,7 @@ const Footer: FC = () => {
                   <div className="font-medium">Google Play</div>
                 </div>
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -170,7 +185,7 @@ const Footer: FC = () => {
           <div className="mb-6 md:mb-0">
             <Link href="/" className="text-2xl font-bold">
               MarketWorld
-                <p className="text-gray-400 text-sm">Your one-stop marketplace for all your shopping needs. Find products from around the world.</p>
+              <p className="text-gray-400 text-sm">Your one-stop marketplace for all your shopping needs. Find products from around the world.</p>
             </Link>
           </div>
           <div className="flex space-x-6">
@@ -209,25 +224,25 @@ const Footer: FC = () => {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex flex-col md:flex-row items-center mb-4 md:mb-0">
               <div className="mb-4 md:mb-0 md:mr-8 relative">
-                <button 
+                <button
                   onClick={toggleCountrySelector}
                   className="flex items-center text-gray-400 hover:text-white text-sm"
                 >
                   {selectedCountryData && (
                     <>
-                      <Image 
-                        src={selectedCountryData.flag} 
-                        width={20} 
-                        height={15} 
-                        alt={selectedCountryData.name} 
+                      <Image
+                        src={selectedCountryData.flag}
+                        width={20}
+                        height={15}
+                        alt={selectedCountryData.name}
                         className="mr-2"
                       />
                       <span>{selectedCountryData.name}</span>
-                      <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        className={`w-4 h-4 ml-1 transition-transform ${showCountrySelector ? 'rotate-180' : ''}`} 
-                        fill="none" 
-                        viewBox="0 0 24 24" 
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={`w-4 h-4 ml-1 transition-transform ${showCountrySelector ? 'rotate-180' : ''}`}
+                        fill="none"
+                        viewBox="0 0 24 24"
                         stroke="currentColor"
                       >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -235,22 +250,21 @@ const Footer: FC = () => {
                     </>
                   )}
                 </button>
-                
+
                 {showCountrySelector && (
                   <div className="absolute bottom-full mb-2 bg-gray-800 rounded shadow-lg py-2 w-48 z-10">
                     {countries.map(country => (
                       <button
                         key={country.code}
-                        className={`flex items-center px-4 py-2 w-full text-left hover:bg-gray-700 transition-colors ${
-                          selectedCountry === country.code ? 'bg-gray-700' : ''
-                        }`}
+                        className={`flex items-center px-4 py-2 w-full text-left hover:bg-gray-700 transition-colors ${selectedCountry === country.code ? 'bg-gray-700' : ''
+                          }`}
                         onClick={() => selectCountry(country.code)}
                       >
-                        <Image 
-                          src={country.flag} 
-                          width={20} 
-                          height={15} 
-                          alt={country.name} 
+                        <Image
+                          src={country.flag}
+                          width={20}
+                          height={15}
+                          alt={country.name}
                           className="mr-2"
                         />
                         <span className="text-sm">{country.name}</span>
@@ -259,12 +273,12 @@ const Footer: FC = () => {
                   </div>
                 )}
               </div>
-              
+
               <div className="text-sm text-gray-400">
                 © {new Date().getFullYear()} MarketWorld, Inc. All Rights Reserved.
               </div>
             </div>
-            
+
             <div className="flex flex-wrap justify-center md:justify-end gap-4 text-xs text-gray-400">
               <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
               <Link href="/terms" className="hover:text-white transition-colors">Terms of Use</Link>

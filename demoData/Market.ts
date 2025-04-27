@@ -1,4 +1,4 @@
-import { Category } from "@/app/markets/CategorySection";
+import { Category } from "@/types/Products";
 
 // Sample data
 export const categories: Category[] = [
@@ -16,7 +16,6 @@ export const markets = [
   { id: 1, name: 'United States', flag: '🇺🇸' },
   { id: 2, name: 'Europe', flag: '🇪🇺' },
   { id: 3, name: 'Asia', flag: '🌏' },
-  { id: 4, name: 'Local Sellers', flag: '🏪' },
 ];
 
 export const deals = [

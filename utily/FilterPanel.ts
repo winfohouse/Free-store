@@ -1,9 +1,9 @@
 // hooks/useFilters.ts
 "use client"
 import { useState, useEffect } from 'react';
-import { useSearchParams , ReadonlyURLSearchParams} from 'next/navigation';
+import { useSearchParams, ReadonlyURLSearchParams } from 'next/navigation';
 import { Product } from '@/types/Products';
-import { products } from '@/demoData/Products2';
+import { brands, categories, platforms, products, tags } from '@/demoData/Products2';
 
 export type FilterOption = {
   label: string;
@@ -16,105 +16,108 @@ export type FilterSectionData = {
   options: FilterOption[];
 };
 
-// Extract unique values helper function
-export const extractUniqueValues = (products: Product[], field: keyof Product) => {
-  const valuesSet = new Set<string>();
-
-  products.forEach(product => {
-    if (Array.isArray(product[field])) {
-      (product[field] as string[]).forEach(value => valuesSet.add(value));
-    } else if (typeof product[field] === 'string') {
-      valuesSet.add(product[field] as string);
-    }
-  });
-
-  return Array.from(valuesSet);
-};
 
 // Generate filter sections from product data
-export const generateFilterSections = (products: Product[]): FilterSectionData[] => {
-  // Extract all available tags, platforms, and brands for filters
-  const tags = extractUniqueValues(products, 'tags');
-  const platforms = extractUniqueValues(products, 'platform');
-  const brands = extractUniqueValues(products, 'brand');
-  const categories = extractUniqueValues(products, 'category'); 
+const mapOptions = (items: string[]) =>
+  items.map(item => ({ label: item, value: item.toLowerCase() }));
 
-  return [
-    {
-      id: 'discount',
-      title: 'Discount',
-      options: [
-        { label: '0% - 5%', value: '0_5' },
-        { label: '5% - 10%', value: '5_10' },
-        { label: '10% - 20%', value: '10_20' },
-        { label: '20% - 30%', value: '20_30' },
-        { label: '30% - 50%', value: '30_50' },
-        { label: '50% & Above', value: '50_plus' }
-      ]
-    },
-    {
-      id: 'category',
-      title: 'Category',
-      options: categories.map(category => ({ label: category, value: category.toLowerCase() }))
-    },
-    {
-      id: 'platform',
-      title: 'Platform',
-      options: platforms.map(platform => ({ label: platform, value: platform.toLowerCase() }))
-    },
-    {
-      id: 'price',
-      title: 'Price Range',
-      options: [
-        { label: 'Under $25', value: 'under_25' },
-        { label: '$25 - $50', value: '25_50' },
-        { label: '$50 - $100', value: '50_100' },
-        { label: '$100 - $200', value: '100_200' },
-        { label: 'Over $200', value: 'over_200' }
-      ]
-    },
-    {
-      id: 'brand',
-      title: 'Brand',
-      options: brands.map(brand => ({ label: brand, value: brand.toLowerCase() }))
-    },
-    {
-      id: 'rating',
-      title: 'Rating',
-      options: [
-        { label: '4★ & Above', value: '4_and_up' },
-        { label: '3★ & Above', value: '3_and_up' },
-        { label: '2★ & Above', value: '2_and_up' }
-      ]
-    },
-    {
-      id: 'shipping',
-      title: 'Shipping',
-      options: [
-        { label: 'Free Shipping', value: 'true' },
-      ]
-    },
-    {
-      id: 'tags',
-      title: 'Tags',
-      options: tags.map(tag => ({ label: tag, value: tag.toLowerCase() }))
-    },
-    {
-      id: 'availability',
-      title: 'Availability',
-      options: [
-        { label: 'In Stock', value: 'true' },
-        { label: 'Stock Out', value: 'false' },
-      ]
-    },
-  ];
-}
+const generateRangeOptions = (
+  min: number,
+  max: number,
+  step: number,
+  labelFormatter: (start: number, end: number | null) => string,
+  valueFormatter: (start: number, end: number | null) => string
+) => {
+  const options = [];
+  for (let i = min; i < max; i += step) {
+    const end = i + step;
+    if (end >= max) {
+      options.push({
+        label: labelFormatter(i, null),
+        value: valueFormatter(i, null),
+      });
+    } else {
+      options.push({
+        label: labelFormatter(i, end),
+        value: valueFormatter(i, end),
+      });
+    }
+  }
+  return options;
+};
+
+export const generateFilterSections = (): FilterSectionData[] => [
+  {
+    id: 'discount',
+    title: 'Discount',
+    options: generateRangeOptions(
+      0,    // min
+      70,   // max
+      10,   // stape
+      (start, end) => (end ? `${start}% - ${end}%` : `${start}% & Above`),
+      (start, end) => (end ? `${start}_${end}` : `${start}_plus`)
+    )
+  },
+  {
+    id: 'price',
+    title: 'Price Range',
+    options: generateRangeOptions(
+      0,    // minPrice
+      250,  // maxPrice
+      50,   // stape
+      (start, end) => (end ? `$${start} - $${end}` : `Over $${start}`),
+      (start, end) => (end ? `${start}_${end}` : `over_${start}`)
+    )
+  },
+  {
+    id: 'category',
+    title: 'Category',
+    options: mapOptions(categories)
+  },
+  {
+    id: 'platform',
+    title: 'Platform',
+    options: mapOptions(platforms)
+  },
+  {
+    id: 'brand',
+    title: 'Brand',
+    options: mapOptions(brands)
+  },
+  {
+    id: 'rating',
+    title: 'Rating',
+    options: [
+      { label: '4★ & Above', value: '4_and_up' },
+      { label: '3★ & Above', value: '3_and_up' },
+      { label: '2★ & Above', value: '2_and_up' }
+    ]
+  },
+  {
+    id: 'shipping',
+    title: 'Shipping',
+    options: [{ label: 'Free Shipping', value: 'true' }]
+  },
+  {
+    id: 'tags',
+    title: 'Tags',
+    options: mapOptions(tags)
+  },
+  {
+    id: 'availability',
+    title: 'Availability',
+    options: [
+      { label: 'In Stock', value: 'true' },
+      { label: 'Stock Out', value: 'false' }
+    ]
+  }
+];
 
 // Main hook for managing filters
-export const useProductFilters = (products: Product[]) => {
+export const useProductFilters = () => {
   const searchParams = useSearchParams();
   const [filters, setFilters] = useState<Record<string, string | string[]>>({});
-  const filterSections = generateFilterSections(products);
+  const filterSections = generateFilterSections();
 
   // Initialize expanded sections
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>(
@@ -134,7 +137,7 @@ export const useProductFilters = (products: Product[]) => {
       }
     });
     setFilters(initialFilters);
-  }, []);
+  }, [searchParams]);
 
   // Toggle a section's expanded state
   const toggleSection = (section: string) => {
@@ -145,7 +148,7 @@ export const useProductFilters = (products: Product[]) => {
   };
 
   // Update filters
-  const updateFilter = (key: string, value: string) => {
+  const updateFilter  = (key: string, value: string)  => {
     setFilters(prevFilters => {
       const newFilters = { ...prevFilters };
 
@@ -172,7 +175,7 @@ export const useProductFilters = (products: Product[]) => {
         // Replace single value with new value
         newFilters[key] = value;
       }
-
+      console.log("newFilters",newFilters)
       return newFilters;
     });
   };
@@ -185,9 +188,6 @@ export const useProductFilters = (products: Product[]) => {
   };
 
   const clearAllFilters = () => setFilters({});
-
-
-
   return {
     filters,
     expandedSections,
@@ -198,6 +198,113 @@ export const useProductFilters = (products: Product[]) => {
     clearAllFilters,
   };
 };
+
+export const filterProducts = (
+  filters: Record<string, string | string[]>,
+  searchParam: string = ''
+): Product[] => {
+  if (Object.keys(filters).length === 0 && !searchParam) return products;
+
+  return products.filter(product => {
+    const titleMatch = !searchParam || product.title.toLowerCase().includes(searchParam.toLowerCase());
+    if (!titleMatch) return false;
+
+    for (const [key, value] of Object.entries(filters)) {
+      if (!applyFilter(key, value, product)) return false;
+    }
+
+    return true;
+  });
+};
+
+const applyFilter = (key: string, value: string | string[], product: Product): boolean => {
+  switch (key) {
+    case 'price':
+      return filterByPrice(value as string, product.price);
+    case 'discount':
+      return filterByDiscount(value as string, product.discount ?? undefined);
+    case 'rating':
+      return filterByRating(value as string, product.rating);
+    case 'brand':
+      return product.brand.toLowerCase() === (value as string).toLowerCase();
+    case 'category':
+      return product.category.toLowerCase() === (value as string).toLowerCase();
+    case 'platform':
+      return product.platform.toLowerCase() === (value as string).toLowerCase();
+    case 'tags':
+      return filterByTags(value, product.tags);
+    case 'availability':
+      const inStock = product.stock !== undefined ? product.stock > 0 : product.available === true;
+      return String(inStock) === value;
+    case 'shipping':
+      return String(product.freeShipping) === value;
+    default:
+      return true;
+  }
+};
+
+const parseRange = (range: string): [number, number | null] => {
+  const [start, end] = range.includes('_plus')
+    ? [parseInt(range.split('_')[0]), null]
+    : range.split('_').map(Number);
+  return [start, end ?? null];
+};
+
+const filterByPrice = (range: string, price: number): boolean => {
+  const [min, max] = parseRange(range);
+  if (max === null) return price > min;
+  return price >= min && price <= max;
+};
+
+const filterByDiscount = (range: string, discount: string | undefined): boolean => {
+  if (!discount) return false;
+  const value = parseFloat(discount.replace('%', ''));
+  const [min, max] = parseRange(range);
+  if (max === null) return value > min;
+  return value >= min && value <= max;
+};
+
+const filterByRating = (range: string, rating: number): boolean => {
+  const min = parseInt(range[0]);
+  return rating >= min;
+};
+
+const filterByTags = (filterTags: string | string[], productTags: string[]): boolean => {
+  const tags = Array.isArray(filterTags) ? filterTags : [filterTags];
+  const lowerTags = productTags.map(tag => tag.toLowerCase());
+  return tags.every(tag => lowerTags.includes(tag.toLowerCase()));
+};
+
+export type Filters = {
+  searchQuery: string,
+  sort: string,
+  minPrice: string,
+  maxPrice: string,
+  categories: string[],
+  rating: string,
+  brand: string,
+  tags: string[],
+  platform: string,
+  availability: string,
+  shipping: string,
+  deal: string,
+}
+
+export const getFiltersFromSearchParams = (searchParams: ReadonlyURLSearchParams): Filters => ({
+  searchQuery: searchParams.get('q') || '',
+  sort: searchParams.get('sort') || '',
+  minPrice: searchParams.get('minPrice') || '',
+  maxPrice: searchParams.get('maxPrice') || '',
+  categories: searchParams.get('categories')?.split(',') || [],
+  rating: searchParams.get('rating') || '',
+  brand: searchParams.get('brand') || '',
+  tags: searchParams.getAll('tag') || [],
+  platform: searchParams.get('platform') || '',
+  availability: searchParams.get('availability') || '',
+  shipping: searchParams.get('shipping') || '',
+  deal: searchParams.get('deal') || '',
+});
+
 
 // Function to remove duplicate products
 export const removeDuplicateProducts = (products: Product[]) => {
@@ -216,74 +323,4 @@ export const removeDuplicateProducts = (products: Product[]) => {
   return Array.from(uniqueProductsMap.values());
 };
 
-export const filterProducts = (filters: Record<string, string | string[]>, searchParam: string = ''): Product[] => {
-  if (Object.keys(filters).length === 0) return products;
 
-  return products.filter(product => {
-
-    if ((searchParam !== '') && !(product.title.toLowerCase().includes(searchParam))) return false;
-
-    for (const [key, value] of Object.entries(filters)) {
-      if (key === 'price') {
-        const price = product.price;
-        if (value === 'under_25' && price >= 25) return false;
-        if (value === '25_50' && (price < 25 || price > 50)) return false;
-        if (value === '50_100' && (price < 50 || price > 100)) return false;
-        if (value === '100_200' && (price < 100 || price > 200)) return false;
-        if (value === 'over_200' && price <= 200) return false;
-      } else if (key === 'discount') {
-        if (!product.discount) return false;
-        const discountValue = parseFloat(product.discount.replace('%', ''));
-        if (value === '0_5' && (discountValue < 0 || discountValue > 5)) return false;
-        if (value === '5_10' && (discountValue <= 5 || discountValue > 10)) return false;
-        if (value === '10_20' && (discountValue <= 10 || discountValue > 20)) return false;
-        if (value === '20_30' && (discountValue <= 20 || discountValue > 30)) return false;
-        if (value === '30_50' && (discountValue <= 30 || discountValue > 50)) return false;
-        if (value === '50_plus' && discountValue <= 50) return false;
-      } else if (key === 'rating') {
-        const rating = product.rating;
-        if (value === '4_and_up' && rating < 4) return false;
-        if (value === '3_and_up' && rating < 3) return false;
-        if (value === '2_and_up' && rating < 2) return false;
-      } else if (key === 'brand') {
-        if (product.brand.toLowerCase() !== (value as string).toLowerCase()) return false;
-      } else if (key === 'category') {
-        if (product.category.toLowerCase() !== (value as string).toLowerCase()) return false;
-      } else if (key === 'platform') {
-        if (product.platform.toLowerCase() !== (value as string).toLowerCase()) return false;
-      } else if (key === 'tags') {
-        const productTags = product.tags.map(tag => tag.toLowerCase());
-        if (Array.isArray(value)) {
-          if (!value.every(tag => productTags.includes(tag.toLowerCase()))) return false;
-        } else {
-          if (!productTags.includes((value as string).toLowerCase())) return false;
-        }
-      } else if (key === 'availability') {
-        const inStock = product.stock !== undefined ? product.stock > 0 : product.available === true;
-        if (String(inStock) !== value) return false;
-      } else if (key === 'shipping') {
-        if (String(product.freeShipping) !== value) return false;
-      }
-    }
-    return true;
-  });
-};
-
-export const getFiltersFromSearchParams = (searchParams: ReadonlyURLSearchParams) => {
-  const filters: Record<string, string | string[]> = {};
-
-  if (searchParams.get('q')) filters.searchQuery = searchParams.get('q')!;
-  if (searchParams.get('sort')) filters.sort = searchParams.get('sort')!;
-  if (searchParams.get('minPrice')) filters.minPrice = searchParams.get('minPrice')!;
-  if (searchParams.get('maxPrice')) filters.maxPrice = searchParams.get('maxPrice')!;
-  if (searchParams.get('categories')) filters.categories = searchParams.get('categories')!.split(',');
-  if (searchParams.get('rating')) filters.rating = searchParams.get('rating')!;
-  if (searchParams.get('brand')) filters.brand = searchParams.get('brand')!;
-  if (searchParams.getAll('tag').length > 0) filters.tags = searchParams.getAll('tag');
-  if (searchParams.get('platform')) filters.platform = searchParams.get('platform')!;
-  if (searchParams.get('availability')) filters.availability = searchParams.get('availability')!;
-  if (searchParams.get('shipping')) filters.shipping = searchParams.get('shipping')!;
-  if (searchParams.get('deal')) filters.deal = searchParams.get('deal')!;
-
-  return filters;
-};
