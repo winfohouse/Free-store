@@ -77,7 +77,7 @@ const Navbar = () => {
     } else {
       setSearchSuggestions([]);
     }
-  }, [searchQuery]);
+  }, [searchQuery, popularSearches]);
 
   // Handle sticky header and click outside for dropdowns
   useEffect(() => {

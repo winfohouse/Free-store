@@ -19,21 +19,22 @@ export default function ProductsPage() {
     searchParams.get('view') === 'list' ? 'list' : 'grid'
   );
   const [isFilterVisible, setIsFilterVisible] = useState(true);
-
+  const [previousSearchQuery, setPreviousSearchQuery] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState(decodeURIComponent((typeof productFilters.filters.searchQuery === "string") ? productFilters.filters.searchQuery : ''));
   const [sortOption, setSortOption] = useState<string>((typeof productFilters.filters.sort === "string") ? productFilters.filters.sort : 'relevance');
 
   const [filteredProducts, setFilteredProducts] = useState<Product[]>();
 
-  // Notify parent component when filters change
   useEffect(() => {
-    productFilters.updateFilter("q", searchQuery);
-    console.log("page", {"search" : searchQuery, "filters": productFilters.filters})
-  }, [searchQuery]);
-    
-  useEffect(()=> {
+    if (searchQuery !== previousSearchQuery) {
+      productFilters.updateFilter("q", searchQuery);
+      setPreviousSearchQuery(searchQuery);
+    }
+  }, [searchQuery, previousSearchQuery, productFilters]);
+
+  useEffect(() => {
     setFilteredProducts(filterProducts(productFilters.filters, searchQuery));
-    },[productFilters.filters, searchQuery]);
+  }, [productFilters.filters, searchQuery]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value.toLowerCase())
@@ -66,7 +67,7 @@ export default function ProductsPage() {
 
         <div className="flex flex-col md:flex-row gap-6">
           <div className={`${isFilterVisible ? 'block' : 'hidden'} md:block`}>
-            <FilterPanel {...productFilters}/>
+            <FilterPanel {...productFilters} />
           </div>
 
           <ProductsSection products={filteredProducts ?? []} />
