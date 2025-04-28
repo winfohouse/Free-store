@@ -151,7 +151,7 @@ const Footer: FC = () => {
               <li><Link href="/careers" className="hover:text-white transition-colors">Careers</Link></li>
               <li><Link href="/press" className="hover:text-white transition-colors">Press Releases</Link></li>
               <li><Link href="/investors" className="hover:text-white transition-colors">Investor Relations</Link></li>
-              <li><Link href="/blog" className="hover:text-white transition-colors">Corporate Blog</Link></li>
+              <li><Link href="/blogs" className="hover:text-white transition-colors">Corporate Blog</Link></li>
               <li><Link href="/sustainability" className="hover:text-white transition-colors">Sustainability</Link></li>
               <li><Link href="/diversity" className="hover:text-white transition-colors">Diversity & Inclusion</Link></li>
             </ul>
@@ -284,7 +284,7 @@ const Footer: FC = () => {
               <Link href="/terms" className="hover:text-white transition-colors">Terms of Use</Link>
               <Link href="/cookies" className="hover:text-white transition-colors">Cookie Settings</Link>
               <Link href="/accessibility" className="hover:text-white transition-colors">Accessibility</Link>
-              <Link href="/sitemap" className="hover:text-white transition-colors">Sitemap</Link>
+              <Link href="/blogs" className="hover:text-white transition-colors">Blog</Link>
             </div>
           </div>
         </div>

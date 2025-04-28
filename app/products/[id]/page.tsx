@@ -28,9 +28,9 @@ import {
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-type props ={params: {id: string}} 
-export default function ProductDetailPage({params} :props) {
-  const productId = params.id; 
+type props = { params: { id: string } }
+export default function ProductDetailPage({ params }: props) {
+  const productId = params.id;
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -75,7 +75,14 @@ export default function ProductDetailPage({params} :props) {
   }
 
   if (!product) {
-    return (
+    return (<>
+      {/* Breadcrumb navigation */}
+      <BreadcrumbNav
+        items={[
+          { label: "Home", href: "/" },
+          { label: "categories", href: `/categories/` },
+        ]}
+      />
       <div className="flex flex-col items-center justify-center min-h-screen">
         <h1 className="text-2xl font-bold mb-2">Product Not Found</h1>
         <p className="text-gray-600 mb-4">The product you&apos;re looking for doesn&apos;t exist or has been removed.</p>
@@ -84,20 +91,20 @@ export default function ProductDetailPage({params} :props) {
           Back to Products
         </Link>
       </div>
-    );
+    </>);
   }
 
   return (
     <>
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Breadcrumb navigation */}
-          <BreadcrumbNav
-            items={[
-              { label: "Home", href: "/" },
-              { label: "categories", href: `/categories/${product.category}` },
-              { label: product.title, href: null }  // Current page
-            ]}
-          />
+        <BreadcrumbNav
+          items={[
+            { label: "Home", href: "/" },
+            { label: "categories", href: `/categories/${product.category}` },
+            { label: product.title, href: null }  // Current page
+          ]}
+        />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Product Images */}
           <div className="space-y-4">
@@ -135,9 +142,8 @@ export default function ProductDetailPage({params} :props) {
                 {product.images.map((img, index) => (
                   <button
                     key={index}
-                    className={`relative h-16 w-24 border-2 rounded overflow-hidden ${
-                      activeImageIndex === index ? 'border-blue-500' : 'border-gray-200'
-                    }`}
+                    className={`relative h-16 w-24 border-2 rounded overflow-hidden ${activeImageIndex === index ? 'border-blue-500' : 'border-gray-200'
+                      }`}
                     onClick={() => setActiveImageIndex(index)}
                   >
                     <img
@@ -149,7 +155,7 @@ export default function ProductDetailPage({params} :props) {
                 ))}
               </div>
             )}
-            
+
             {/* Frequently Bought Together */}
             {product.frequentlyBoughtTogether && product.frequentlyBoughtTogether.length > 0 && (
               <div className="p-6 rounded-lg shadow-sm mb-6 mt-12">
@@ -280,11 +286,10 @@ export default function ProductDetailPage({params} :props) {
                   {product.variants.map((variant, index) => (
                     <button
                       key={index}
-                      className={`px-3 py-2 rounded-md border ${
-                        selectedVariant === index
+                      className={`px-3 py-2 rounded-md border ${selectedVariant === index
                         ? 'border-blue-500 bg-blue-50 text-blue-700'
                         : 'border-gray-300 hover:border-gray-400'
-                      }`}
+                        }`}
                       onClick={() => setSelectedVariant(index)}
                     >
                       {variant.name} - ${variant.price.toFixed(2)}
@@ -302,9 +307,8 @@ export default function ProductDetailPage({params} :props) {
                   {product.colors.map((color, index) => (
                     <button
                       key={index}
-                      className={`h-10 w-10 rounded-full border-2 ${
-                        selectedColor === index ? 'border-blue-500' : 'border-gray-300'
-                      }`}
+                      className={`h-10 w-10 rounded-full border-2 ${selectedColor === index ? 'border-blue-500' : 'border-gray-300'
+                        }`}
                       style={{ backgroundColor: color.code }}
                       title={color.name}
                       onClick={() => setSelectedColor(index)}
@@ -372,11 +376,10 @@ export default function ProductDetailPage({params} :props) {
                 {product.ctaText || 'Add to Cart'}
               </button>
               <button
-                className={`p-3 rounded-md border ${
-                  isWishlisted
+                className={`p-3 rounded-md border ${isWishlisted
                   ? 'border-red-500 bg-red-50 text-red-500'
                   : 'border-gray-300 hover:border-gray-400 text-gray-600'
-                }`}
+                  }`}
                 onClick={() => setIsWishlisted(!isWishlisted)}
                 aria-label="Add to wishlist"
               >
@@ -421,31 +424,28 @@ export default function ProductDetailPage({params} :props) {
           <div className="border-b border-gray-200">
             <nav className="flex space-x-8">
               <button
-                className={`py-4 px-1 text-center border-b-2 font-medium text-sm ${
-                  activeTab === 'description'
+                className={`py-4 px-1 text-center border-b-2 font-medium text-sm ${activeTab === 'description'
                   ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
+                  }`}
                 onClick={() => setActiveTab('description')}
               >
                 Description
               </button>
               <button
-                className={`py-4 px-1 text-center border-b-2 font-medium text-sm ${
-                  activeTab === 'specifications'
+                className={`py-4 px-1 text-center border-b-2 font-medium text-sm ${activeTab === 'specifications'
                   ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
+                  }`}
                 onClick={() => setActiveTab('specifications')}
               >
                 Specifications
               </button>
               <button
-                className={`py-4 px-1 text-center border-b-2 font-medium text-sm ${
-                  activeTab === 'reviews'
+                className={`py-4 px-1 text-center border-b-2 font-medium text-sm ${activeTab === 'reviews'
                   ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
+                  }`}
                 onClick={() => setActiveTab('reviews')}
               >
                 Reviews ({product.reviews?.length || 0})
@@ -478,9 +478,8 @@ export default function ProductDetailPage({params} :props) {
                     {product.specifications.map((spec, index) => (
                       <div
                         key={index}
-                        className={`grid grid-cols-3 py-3 ${
-                          index < product.specifications!.length - 1 ? 'border-b border-gray-200' : ''
-                        }`}
+                        className={`grid grid-cols-3 py-3 ${index < product.specifications!.length - 1 ? 'border-b border-gray-200' : ''
+                          }`}
                       >
                         <dt className="text-sm font-medium text-gray-500">{spec.name}</dt>
                         <dd className="text-sm text-gray-900 col-span-2">{spec.value}</dd>

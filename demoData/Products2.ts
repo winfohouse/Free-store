@@ -3,11 +3,11 @@ import jsonProductsData from "@/demoData/product.json";
 import { Product } from "@/types/Products";
 import { normalizeProduct } from "@/utily/normalizaProduct";
 
-let uniqueCategories = new Set<string>();
-let uniquePlatforms = new Set<string>();
-let uniqueBrands = new Set<string>();
-let uniqueTags = new Set<string>();
-let uniqueModels = new Set<string>();
+const uniqueCategories = new Set<string>();
+const uniquePlatforms = new Set<string>();
+const uniqueBrands = new Set<string>();
+const uniqueTags = new Set<string>();
+const uniqueModels = new Set<string>();
 
 export const products: Product[] = jsonProductsData.products.map((product, index) => {
   // Use a fixed seed: index divided by total products

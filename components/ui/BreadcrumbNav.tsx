@@ -12,7 +12,7 @@ interface BreadcrumbNavProps {
   items: BreadcrumbItem[];
 }
 
-export default function breadcrumbnav({ items }: BreadcrumbNavProps) {
+export default function Breadcrumbnav({ items }: BreadcrumbNavProps) {
   return (
     <div className="flex items-center text-sm text-gray-500 mb-6 overflow-x-auto whitespace-nowrap">
       {items.map((item, index) => (
