@@ -1,8 +1,4 @@
-
 // app/terms/page.tsx
-
-import React from "react";
-
 export const metadata = {
   title: "Terms of Service | Onemarke",
   description: "Read the terms and conditions for using Onemarke.",
@@ -14,7 +10,7 @@ export default function TermsOfServicePage() {
       <h1 className="text-4xl font-bold mb-6">Terms of Service</h1>
 
       <p className="mb-8 text-gray-700">
-        These Terms of Service ("Terms") govern your use of the Onemarke website and services. By accessing or using our website, you agree to be bound by these Terms.
+        These Terms of Service (&quot;Terms&quot;) govern your use of the Onemarke website and services. By accessing or using our website, you agree to be bound by these Terms.
       </p>
 
       <section className="mb-8">
@@ -41,7 +37,7 @@ export default function TermsOfServicePage() {
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4">4. Disclaimer</h2>
         <p className="text-gray-700">
-          The information on Onemarke is provided "as is" without warranties of any kind. We do not guarantee the accuracy, reliability, or completeness of any information provided.
+          The information on Onemarke is provided &quot;as is&quot; without warranties of any kind. We do not guarantee the accuracy, reliability, or completeness of any information provided.
         </p>
       </section>
 

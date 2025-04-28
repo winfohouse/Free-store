@@ -11,7 +11,7 @@ export default function CookiePolicyPage() {
 
       <section className="mb-8 text-gray-700 space-y-4">
         <p>
-          This Cookie Policy explains how <strong>Onemarke</strong> ("we", "us", and "our") uses cookies and similar technologies when you visit our website at <a href="https://onemarke.vercel.app" className="text-blue-600 underline">https://onemarke.vercel.app</a>.
+          This Cookie Policy explains how <strong>Onemarke</strong> (&quot;we&quot;, &quot;us&quot;, and &quot;our&quot;) uses cookies and similar technologies when you visit our website at <a href="https://onemarke.vercel.app" className="text-blue-600 underline">https://onemarke.vercel.app</a>.
         </p>
 
         <p>

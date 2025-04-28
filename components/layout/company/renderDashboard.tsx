@@ -249,7 +249,7 @@ const renderDashboard = (company: Company) => (
                   />
                 ))}
               </div>
-              <p className="text-gray-700 text-sm italic">"{testimonial.text}"</p>
+              <p className="text-gray-700 text-sm italic">&quot;{testimonial.text}&quot;</p>
             </div>
           ))}
         </div>
