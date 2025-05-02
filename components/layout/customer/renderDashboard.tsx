@@ -1,7 +1,8 @@
-import { Shield, Badge, User, Settings, Package, Bell, Tag, Gift, Truck, Heart, Star, RefreshCw } from "lucide-react";
-import { ProfileCard, ProgressBar, Button } from "./compnents";
+import { Customer } from "@/types/Customer";
+import { Badge, Bell, Gift, Heart, Package, RefreshCw, Settings, Shield, Star, Tag, Truck, User } from "lucide-react";
+import { Button, ProfileCard, ProgressBar } from "./compnents";
 
-const renderDashboard = (customer) => (
+const renderDashboard = (customer: Customer) => (
     <div>
       <div className="flex flex-col md:flex-row p-6 mb-6">
         <div className="flex-1">

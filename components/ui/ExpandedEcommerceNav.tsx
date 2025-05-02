@@ -126,21 +126,21 @@ export default function ExpandedEcommerceNav() {
       {/* Content Area */}
       <div className="mt-6 p-6 bg-gray-50 rounded-lg border border-gray-200">
         <div className="flex items-center mb-4">
-          <div className={`p-3 rounded-full ${activeItem.color} text-white inline-flex items-center justify-center mr-4`}>
-            {activeItem.icon}
+          <div className={`p-3 rounded-full ${activeItem?.color} text-white inline-flex items-center justify-center mr-4`}>
+            {activeItem?.icon}
           </div>
           <div>
             <h2 className="text-2xl font-bold">{activePlatform}</h2>
             <div className="flex space-x-4 text-sm text-gray-500 mt-1">
-              <span>Founded: {activeItem.founded}</span>
-              <span>Market Share: {activeItem.marketShare}</span>
+              <span>Founded: {activeItem?.founded}</span>
+              <span>Market Share: {activeItem?.marketShare}</span>
             </div>
           </div>
         </div>
         
         <div className="bg-white p-4 rounded-md border border-gray-200 mb-4">
           <h3 className="font-medium text-gray-700 mb-2">Platform Overview</h3>
-          <p className="text-gray-600">{activeItem.description}</p>
+          <p className="text-gray-600">{activeItem?.description}</p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

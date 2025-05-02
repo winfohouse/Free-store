@@ -1,8 +1,9 @@
 import { Badge, Bell, CreditCard, DollarSign, MapPin, Shield, User } from "lucide-react";
 import { ProfileCard, Button } from "./compnents";
+import { Customer } from "@/types/Customer";
 
 
-const renderAccount = (customer) => (
+const renderAccount = (customer: Customer) => (
   <div>
     <div className="grid grid-cols-1 md:grid-cols-2 p-6">
       <ProfileCard>

@@ -3,6 +3,7 @@ import Header from '@/components/layout/Header'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import ProgressBar from '@/components/ui/ProgressBar'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,6 +22,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <div className="min-h-screen flex flex-col">
           <Header />
+          <ProgressBar />
           {children}
           <Footer />
         </div>

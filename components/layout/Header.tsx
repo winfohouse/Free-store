@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Bell,
   ChevronDown,
@@ -69,6 +68,7 @@ const Navbar = () => {
 
   // Simulate search suggestions
   useEffect(() => {
+    console.log("header searchQuery");
     if (searchQuery.length > 1) {
       const filtered = popularSearches.filter(item =>
         item.toLowerCase().includes(searchQuery.toLowerCase())
@@ -77,10 +77,11 @@ const Navbar = () => {
     } else {
       setSearchSuggestions([]);
     }
-  }, [searchQuery, popularSearches]);
+  }, [searchQuery]);
 
   // Handle sticky header and click outside for dropdowns
   useEffect(() => {
+    console.log("header scroll");
     setIsMounted(true);
 
     const handleScroll = () => {
@@ -307,7 +308,7 @@ const Navbar = () => {
                 isOpen={isCartOpen}
                 onClose={() => setIsCartOpen(false)}
                 activeTab={activeTab}
-                onTabChange={activeTab}
+                onTabChange={newTab => setActiveTab(newTab)}
               />
 
               <div className="relative" ref={accountDropdownRef}>

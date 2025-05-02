@@ -1,5 +1,4 @@
 import { FilterOption, FilterSectionData } from '@/types/FilterPanel';
-import { useProductFilters } from '@/utily/FilterPanel';
 import { ChevronDown, Sliders, X } from 'lucide-react';
 
 // FilterButton Component

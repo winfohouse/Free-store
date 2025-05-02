@@ -70,7 +70,7 @@ export default function BlogPage() {
             <Search className="absolute left-4 top-3.5 text-gray-400" size={20} />
           </div>
 
-          <div className="flex flex-wrap gap-2 justify-center">
+          <div className="lg:max-w-[50%] flex gap-2  justify-center flex-wrap md:justify-start md:flex-nowrap overflow-x-auto">
             {categories.map((category) => (
               <button
                 key={category}

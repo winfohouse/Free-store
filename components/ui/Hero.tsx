@@ -25,7 +25,7 @@ export default function Hero() {
     } else {
       setSearchSuggestions([]);
     }
-  }, [searchQuery, popularSearches]);
+  }, [searchQuery]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && searchQuery.trim() !== "") {

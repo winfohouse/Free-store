@@ -9,14 +9,38 @@ import {
  * Sidebar Cart Component
  * Displays cart and wishlist items in a sliding sidebar
  */
+type props = {
+  isOpen : boolean;
+  onClose: () => void;
+  activeTab: string;
+  onTabChange: ( newTab: "cart" | "wishlist") => void;
+}
+type cartItem = {
+    id: number;
+    name: string;
+    price: number;
+    quantity: number;
+    image: string;
+    color: string;
+    inStock: boolean;
+    size?: string;
+}
+type wishlistItem = {
+    id: number;
+    name: string;
+    price: number;
+    image: string;
+    inStock: boolean;
+}
+
 const SidebarCart = ({ 
   isOpen, 
   onClose, 
   activeTab = 'cart',
-  onTabChange = () => {},
-}) => {
+  onTabChange,
+}: props) => {
   // Sample data - in a real app, this would come from context or props
-  const [cartItems, setCartItems] = useState([
+  const [cartItems, setCartItems] = useState<cartItem[]>([
     {
       id: 1,
       name: "Wireless Noise-Cancelling Headphones",
@@ -47,7 +71,7 @@ const SidebarCart = ({
     }
   ]);
 
-  const [wishlistItems, setWishlistItems] = useState([
+  const [wishlistItems, setWishlistItems] = useState<wishlistItem[]>([
     {
       id: 4,
       name: "Leather Weekend Bag",
@@ -68,7 +92,7 @@ const SidebarCart = ({
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   
   // Handle quantity changes
-  const updateQuantity = (id, newQuantity) => {
+  const updateQuantity = (id: number, newQuantity: number) => {
     if (newQuantity < 1) return;
     
     setCartItems(cartItems.map(item => 
@@ -77,27 +101,26 @@ const SidebarCart = ({
   };
   
   // Remove from cart
-  const removeFromCart = (id) => {
+  const removeFromCart = (id: number) => {
     setCartItems(cartItems.filter(item => item.id !== id));
   };
   
   // Move from wishlist to cart
-  const moveToCart = (id) => {
+  const moveToCart = (id: number) => {
     const item = wishlistItems.find(item => item.id === id);
     if (item) {
       setWishlistItems(wishlistItems.filter(item => item.id !== id));
-      setCartItems([...cartItems, {...item, quantity: 1}]);
     }
   };
   
   // Remove from wishlist
-  const removeFromWishlist = (id) => {
+  const removeFromWishlist = (id: number) => {
     setWishlistItems(wishlistItems.filter(item => item.id !== id));
   };
 
   // Handle escape key press
   useEffect(() => {
-    const handleEsc = (event) => {
+    const handleEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         onClose();
       }

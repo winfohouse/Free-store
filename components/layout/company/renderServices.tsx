@@ -1,7 +1,8 @@
 import { Package, Globe, Mail, Phone, MapPin, FileText, Download } from "lucide-react";
 import { ProfileCard, Button } from "../customer/compnents";
+import { Company } from "@/types/Company";
 
-  const renderServices = (company) => (
+  const renderServices = (company: Company) => (
     <div>
       <ProfileCard>
         <h3 className="text-xl font-bold mb-6">Services & Solutions</h3>

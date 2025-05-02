@@ -1,8 +1,9 @@
 'use client'
-import renderDashboard from '@/components/layout/customer/renderDashboard';
 import { TabButton } from '@/components/layout/customer/compnents';
 import renderAccount from '@/components/layout/customer/renderAccount';
+import renderDashboard from '@/components/layout/customer/renderDashboard';
 import renderOrders from '@/components/layout/customer/renderOrders';
+import { Customer } from '@/types/Customer';
 import {
   ChevronDown,
   HelpCircle,
@@ -18,7 +19,7 @@ const EnhancedCustomerProfile = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [activeMobileMenu, setActiveMobileMenu] = useState(false);
   
-  const customer = {
+  const customer: Customer = {
     name: "Sarah Johnson",
     avatar: "https://placehold.co/80x80", 
     email: "sarah.johnson@example.com",

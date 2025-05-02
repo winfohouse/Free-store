@@ -1,7 +1,8 @@
-import { Search, Filter, Package, Clock, Truck, CheckCircle, Repeat, Star, Bookmark, Badge } from "lucide-react";
-import { ProfileCard, Button, TabButton } from "./compnents";
+import { Customer } from "@/types/Customer";
+import { Badge, Bookmark, CheckCircle, Clock, Filter, Package, Repeat, Search, Star, Truck } from "lucide-react";
+import { Button, ProfileCard, TabButton } from "./compnents";
 
-const renderOrders = (customer) => (
+const renderOrders = (customer:Customer) => (
     <div>
       <ProfileCard>
         <div className="flex flex-wrap items-center justify-between p-4 mb-6">

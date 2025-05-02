@@ -1,23 +1,12 @@
 "use client"
 import ProductCard from "@/components/product/ProductCard";
-import { categories } from "@/demoData/Market";
 import { Product } from "@/types/Products";
 import { removeDuplicateProducts } from "@/utily/FilterPanel";
-import { useEffect, useState } from "react";
 
 type props = { products: Product[], };
 
 export default function ProductsSection({ products }: props) {
-  const [filter, setFilter] = useState('all');
-  const [filteredProducts, setFilteredProducts] = useState(removeDuplicateProducts(products));
-
-  useEffect(() => {
-    if (filter === 'all') {
-      setFilteredProducts(removeDuplicateProducts(products));
-    } else {
-      setFilteredProducts(removeDuplicateProducts(products.filter(product => product.category === filter)));
-    }
-  }, [filter, products]);
+  const filteredProducts = (removeDuplicateProducts(products));
 
   return (
     <div className="py-6">

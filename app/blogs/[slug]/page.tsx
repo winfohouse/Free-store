@@ -12,13 +12,15 @@ export default function Post({ params }: { params: { slug: string } }) {
 
   if (!postMeta || !postContent) {
     return (<>
-        {/* Breadcrumb navigation */}
+      {/* Breadcrumb navigation */}
+      <div className="p-4">
         <BreadcrumbNav
           items={[
             { label: "Home", href: "/" },
             { label: "Blogs", href: `/blogs/` },
           ]}
         />
+      </div>
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
         <h1 className="text-3xl font-bold text-gray-800">Post not found</h1>
         <p className="mt-4 text-gray-600">The blog post you&apos;re looking for doesn&apos;t exist.</p>
@@ -38,14 +40,14 @@ export default function Post({ params }: { params: { slug: string } }) {
 
   return (
     <div className="bg-gray-50 min-h-screen pb-16">
-        {/* Breadcrumb navigation */}
-        <BreadcrumbNav
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Blogs", href: `/blogs` },
-            { label: postMeta.title, href: null }  // Current page
-          ]}
-        />
+      {/* Breadcrumb navigation */}
+      <BreadcrumbNav
+        items={[
+          { label: "Home", href: "/" },
+          { label: "Blogs", href: `/blogs` },
+          { label: postMeta.title, href: null }  // Current page
+        ]}
+      />
       {/* Hero section with image */}
       <div className="relative w-full h-96">
         <Image
