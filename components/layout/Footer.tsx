@@ -184,9 +184,17 @@ const Footer: FC = () => {
         <div className="mt-12 flex flex-col md:flex-row justify-between items-center">
           <div className="mb-6 md:mb-0">
             <Link href="/" className="text-2xl font-bold">
-              MarketWorld
-              <p className="text-gray-400 text-sm">Your one-stop marketplace for all your shopping needs. Find products from around the world.</p>
+              <div className="flex gap-2" >
+                <Image
+                  src="/white-logo.svg"
+                  alt="MarketWorld logo"
+                  width={40}
+                  height={40}
+                />
+                MarketWorld
+              </div>
             </Link>
+              <p>Your one-stop marketplace for all your shopping needs. Find products from around the world.</p>
           </div>
           <div className="flex space-x-6">
             <a href="https://facebook.com" aria-label="Facebook" className="text-gray-400 hover:text-white transition-colors">

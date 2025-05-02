@@ -1,4 +1,6 @@
 "use client";
+import { products } from "@/demoData/Products2";
+import { extractUniqueValues } from "@/utily/objectHandel";
 import {
   Bell,
   ChevronDown,
@@ -15,12 +17,11 @@ import {
   User,
   X
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import SidebarCart from "../ui/SidebarCart";
-import { extractUniqueValues } from "@/utily/objectHandel";
-import { products } from "@/demoData/Products2";
 
 // Define types for categories
 interface Category {
@@ -57,7 +58,7 @@ const Navbar = () => {
   const [notificationCount, setNotificationCount] = useState(0);
 
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('cart');
+  const [activeTab, setActiveTab] = useState<"cart" | "wishlist">('cart');
 
   // Refs for click outside detection
   const accountDropdownRef = useRef<HTMLDivElement>(null);
@@ -68,7 +69,6 @@ const Navbar = () => {
 
   // Simulate search suggestions
   useEffect(() => {
-    console.log("header searchQuery");
     if (searchQuery.length > 1) {
       const filtered = popularSearches.filter(item =>
         item.toLowerCase().includes(searchQuery.toLowerCase())
@@ -81,7 +81,6 @@ const Navbar = () => {
 
   // Handle sticky header and click outside for dropdowns
   useEffect(() => {
-    console.log("header scroll");
     setIsMounted(true);
 
     const handleScroll = () => {
@@ -142,7 +141,7 @@ const Navbar = () => {
   return (
     <div className={navbarClasses}>
       {/* Top bar with promotions/announcements */}
-      <div className="bg-blue-900 text-white py-1 px-4 text-center text-sm">
+      <div className={`bg-blue-900 text-white py-1 px-4 text-center text-sm ${isSticky && "hidden"}`}>
         <p>Free shipping on orders over $50 | Use code WELCOME10 for 10% off your first order</p>
       </div>
 
@@ -156,7 +155,14 @@ const Navbar = () => {
               <Menu size={24} />
             </button>
 
-            <Link href="/" className="text-2xl font-bold">MarketWorld</Link>
+            <Link href="/" className="text-2xl font-bold">
+              <Image
+                src="/white-logo.svg"
+                alt="MarketWorld logo"
+                width={40}
+                height={40}
+              />
+            </Link>
 
             <div className="hidden md:flex place-items-center ml-8 space-x-1 text-center" ref={categoryDropdownRef}>
               <button
@@ -218,7 +224,7 @@ const Navbar = () => {
           </div>
 
           <div
-            className={`flex-1 mx-4 hidden md:block transition-all duration-500 ease-in-out ${isSearchFocused ? "absolute left-4 right-4 top-4 z-40" : "relative"}`}
+            className={`flex-1 mx-4 transition-all duration-500 ease-in-out ${isSearchFocused ? "absolute left-4 right-4 top-4 z-40" : "relative"}`}
           >
             <div className="relative">
               <input
@@ -248,6 +254,7 @@ const Navbar = () => {
                     key={idx}
                     className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                     onClick={() => {
+                      setIsSearchFocused(false);
                       router.push(`/search?q=${encodeURIComponent(suggestion)}`);
                     }}
                   >
@@ -285,7 +292,7 @@ const Navbar = () => {
                 <span className="hidden lg:inline">Notifications</span>
               </button>
 
-              <Link href="/wishlist" className="flex items-center relative hover:text-blue-200">
+              <div className="flex items-center relative hover:text-blue-200" onClick={() =>{ setActiveTab("wishlist"); setIsCartOpen(true); }}>
                 <Heart size={20} className="mr-1" />
                 {wishlistCount > 0 && (
                   <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
@@ -293,9 +300,9 @@ const Navbar = () => {
                   </span>
                 )}
                 <span className="hidden lg:inline">Wishlist</span>
-              </Link>
+              </div>
 
-              <div className="flex items-center relative hover:text-blue-200" onClick={() => setIsCartOpen(true)}>
+              <div className="flex items-center relative hover:text-blue-200" onClick={() => {setActiveTab("cart"); setIsCartOpen(true);}}>
                 <ShoppingCart size={20} className="mr-1" />
                 {cartCount > 0 && (
                   <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
@@ -378,31 +385,6 @@ const Navbar = () => {
               </Link>
             </div>
           </div>
-        </div>
-
-        <div className="md:hidden py-2">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search products..."
-              className="w-full py-2 px-4 rounded-lg text-black"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <button className="absolute right-2 top-2 text-gray-500">
-              <Search size={20} />
-            </button>
-          </div>
-
-          {searchQuery.length > 1 && searchSuggestions.length > 0 && (
-            <div className="bg-white mt-1 rounded-lg shadow-lg z-30 text-black py-2">
-              {searchSuggestions.map((suggestion, idx) => (
-                <div key={idx} className="px-4 py-2 hover:bg-gray-100">
-                  {suggestion}
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       </div>
 

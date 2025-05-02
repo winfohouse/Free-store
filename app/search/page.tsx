@@ -18,7 +18,7 @@ export default function ProductsPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>(
     searchParams.get('view') === 'list' ? 'list' : 'grid'
   );
-  const [isFilterVisible, setIsFilterVisible] = useState(true);
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [previousSearchQuery, setPreviousSearchQuery] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState(decodeURIComponent((typeof productFilters.filters.searchQuery === "string") ? productFilters.filters.searchQuery : ''));
   const [sortOption, setSortOption] = useState<string>((typeof productFilters.filters.sort === "string") ? productFilters.filters.sort : 'relevance');

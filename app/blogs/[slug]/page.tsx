@@ -13,7 +13,7 @@ export default function Post({ params }: { params: { slug: string } }) {
   if (!postMeta || !postContent) {
     return (<>
       {/* Breadcrumb navigation */}
-      <div className="p-4">
+      <div className="flex m-4">
         <BreadcrumbNav
           items={[
             { label: "Home", href: "/" },
