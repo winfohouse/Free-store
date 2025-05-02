@@ -6,15 +6,15 @@ import { getProductsBy } from '@/utily/products';
 import Link from 'next/link';
 
 // Generate breadcrumb trail
-type props = { params: { id: string } }
+type props = { params: { market: string } }
 
 export default function MarketsPage({ params }: props) {
 
   // Get category slug from URL parameters
-  const { id } = params
-  const platformName = platformsLinks.find((name) => name.slug == id);
+  const { market } = params
+  const platformName = platformsLinks.find((name) => name.slug == market);
   // Get products for this category
-  const categoryProducts = products.filter(product => encodeURIComponent(product.platform)  == id);
+  const categoryProducts = products.filter(product => encodeURIComponent(product.platform)  == market);
 
   const productByCategory = getProductsBy(categoryProducts, "category")
   return (
@@ -45,7 +45,7 @@ export default function MarketsPage({ params }: props) {
                 <div className="container mx-auto px-4">
                   <div className="flex justify-between">
                     <h2 className="text-xl font-bold mb-4">{group.category}</h2>
-                    <Link className="bold text-blue-600" href={`/marteks/${group.category}/`}>See More</Link>
+                    <Link className="bold text-blue-600" href={`/categories/${group.category.toLowerCase()}/`}>See More</Link>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
                     {group.products.map(product => (
@@ -65,7 +65,7 @@ export default function MarketsPage({ params }: props) {
                 <div className="container mx-auto px-4">
                   <div className="flex justify-between">
                     <h2 className="text-xl font-bold mb-4">{group.category}</h2>
-                    <Link className="bold text-blue-600" href={`/markets/${group.category}/`}>See More</Link>
+                    <Link className="bold text-blue-600" href={`/markets/${group.category.toLowerCase()}/`}>See More</Link>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
                     {group.products.map(product => (
